@@ -1,12 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-import http from '../../helpers/http';
+import axios from '../../helpers/http';
 
-export const showHistory = createAsyncThunk('history/showHistory',async({token,pages})=>{
+export const showHistory = createAsyncThunk('history/showHistory',async({pages,limit,filter})=>{
   const results = {}
   try{
     const next = pages?pages:'1'
-    const {data} = await http(token).get(`/historyTransaction?page=${next}`)
+    const lim = limit?limit:4
+    const fil = filter?filter:'MONTH'
+    const {data} = await axios.get(`/transaction/history?page=${next}&limit=${lim}&filter=${fil}`)
     results.data = data.result
     console.log(results.data);
     return {...data}

@@ -8,8 +8,7 @@ import { logout } from '../redux/reducer/auth';
 import { showProfile } from '../redux/asyncAction/profile';
 
 const NavBoard = () => {
-  const token = useSelector((state=>state.auth.token))
-  console.log(token);
+  const id = useSelector((state=>state.auth.token))
   const dispatch = useDispatch()
   const logOut =()=>{
     dispatch(logout(()=>{
@@ -17,38 +16,38 @@ const NavBoard = () => {
     }))
   }
   React.useEffect(() => {
-    if(token){
-      dispatch(showProfile(token))
+    if(id){
+      dispatch(showProfile(id))
     }
-    if(!token){
+    if(!id){
       router.push('auth/Login')
     }
-  }, [token]);
+  }, [id]);
   return(
     <>
       <Col className="col-12 col-md-3 d-flex flex-column">
         <div className="d-flex flex-md-column wrap-dashboard mt-3 ps-md-4 py-3 pt-md-4 h-100">
           <div className="flex-fill d-flex justify-content-around justify-content-md-start flex-md-column gap-md-5 ">
-            <Link href='/home' className="d-flex align-items-center wrap-nav-dashboard">
-              <div>
+            <Link href='/home'>
+              <div className="d-flex align-items-center wrap-nav-dashboard">
                 <FiGrid className="navboard-icons"/>
                 <p className="ms-2 ms-md-3 my-0 wrap-nav-text">Dasboard</p>
               </div>
             </Link>
-            <Link href='/transfer' className="d-flex align-items-center wrap-nav-dashboard">
-              <div>
+            <Link href='/transfer'>
+              <div className="d-flex align-items-center wrap-nav-dashboard">
                 <FiArrowUp className="navboard-icons"/>
                 <p className="ms-2 ms-md-3 my-0 wrap-nav-text">Transfer</p>
               </div>
             </Link>
-            <Link href='/topUp' className="d-flex align-items-center wrap-nav-dashboard ">
-              <div>
+            <Link href='/topUp' >
+              <div className="d-flex align-items-center wrap-nav-dashboard ">
                 <FiPlus className="navboard-icons"/>
                 <p className="ms-2 ms-md-3 my-0 wrap-nav-text">Top Up</p>
               </div>
             </Link>
-            <Link href='/profile' className="d-flex align-items-center wrap-nav-dashboard">
-              <div>
+            <Link href='/profile'>
+              <div className="d-flex align-items-center wrap-nav-dashboard">
                 <FiUser className="navboard-icons"/>
                 <p className="ms-2 ms-md-3 my-0 wrap-nav-text">Profile</p>
               </div>

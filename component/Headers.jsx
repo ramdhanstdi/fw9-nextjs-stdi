@@ -7,11 +7,12 @@ import { showProfile } from '../redux/asyncAction/profile'
 import Image from 'next/image';
 
 const Header = () => {
-  const data = useSelector((state=>state.profile.value))
-  const token = useSelector((state=>state.auth.token))
+  const profile = useSelector((state=>state.profile?.value))
+  const data = profile?Object.values(profile):null
+  const id = useSelector((state=>state.auth.id))
   const dispatch = useDispatch()
   React.useEffect(()=>{
-    dispatch(showProfile(token))
+    dispatch(showProfile(id))
   },[])
   return (
     <>
@@ -23,17 +24,22 @@ const Header = () => {
         </Col>
         <Col md={5}>
           <div className="d-flex justify-content-between justify-content-md-end align-items-center wrap-profile ps-3 px-md-3 mx-2 mx-md-3">
-            {data?.result?.map((val)=>{
-              const urlImage=`http://localhost:3333/public/uploadProfile/${val.profile_photo}`
-              return(
-                <>
-                  <Image src={val.profile_photo?urlImage:defaultimg} className="img-home-prof img-fluid" alt="profile"/>
-                  <div className="d-flex-column justify-content-center mx-3">
-                    <p className="name-profile">{val.first_name+' '+val.last_name}</p>
-                    <p className="num-profile">{val.num_phone}</p>
-                  </div>
-                </>
-              )
+            {data?.map((val)=>{
+              console.log(val);
+              const urlImage=`/res.cloudinary.com/${val.image}`
+              if(val.id){
+                return(
+                  <>
+                    <div className="img-home-prof img-fluid">
+                      <Image src={val.image?urlImage:defaultimg} width={45} height={45} alt="profile"/>
+                    </div>
+                    <div className="d-flex-column justify-content-center mx-3">
+                      <p className="name-profile">{val.firstName+' '+val.lastName}</p>
+                      <p className="num-profile">{val.noTelp}</p>
+                    </div>
+                  </>
+                )
+              }
             })}
             <Dropdown>
               <Dropdown.Toggle className="w-100 wrap-bg-button wrap-header-button" type="button">

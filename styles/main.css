@@ -45,7 +45,7 @@ body{
 }
 
 .img-home-prof{
-    max-height: 55px;
+    max-height: 55px !important;
 }
 
 .name-profile{
@@ -899,7 +899,7 @@ body.modal-open{
     }
 
     .img-home-prof{
-        max-height: 40px;
+        max-height: 40px !important;
     }
 
     .wrap-nav-text{

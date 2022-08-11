@@ -6,10 +6,9 @@ import Link from 'next/link';
 import { Formik } from 'formik';
 import * as Yup from 'yup'
 import Head from 'next/head';
-// import { Helmet } from 'react-helmet';
-// import { useSelector,useDispatch } from 'react-redux';
-// import { register } from '../redux/asyncAction/auth';
-// import { costumeEmail, deleteErrorAuth } from '../redux/reducer/auth';
+import { useSelector,useDispatch } from 'react-redux';
+import { register } from '../redux/asyncAction/auth';
+import Router from 'next/router';
 
 const signupSchema = Yup.object().shape({
   username: Yup.string().min(5).required('Required'),
@@ -18,14 +17,12 @@ const signupSchema = Yup.object().shape({
 })
 
 const AuthSignUp = ({errors,handleChange,handleSubmit}) => {
-//   const navigate = useNavigate()
-//   const success = useSelector((state=>state.auth.successmsg))
-
-//   React.useEffect(()=>{
-//     if(success){
-//       navigate('/createPin',{state:{success}})
-//     }
-//   },[success])
+  const success = useSelector((state=>state.auth.successmsg))
+  React.useEffect(()=>{
+    if(success){
+      Router.push('/auth/Login')
+    }
+  },[success])
   let lock = true
   lock = errors.email!==undefined||errors.password!==undefined||errors.username!==undefined
   return(
@@ -63,23 +60,22 @@ const AuthSignUp = ({errors,handleChange,handleSubmit}) => {
 }
 
 const SignUp = () => {
-//   const dispatch = useDispatch()
-//   const successmsg = useSelector((state=>state.auth.successmsg))
-//   const navigate = useNavigate()
-//   const signUpRequest = (val) => {
-//     const request = {username:val.username,email:val.email,password:val.password}
-//     if(val.email===''&&val.password===''){
-//       window.alert('Write Your Email and Password')
-//     }else{
-//       dispatch(costumeEmail(val.email))
-//       dispatch(register(request))
-//     }
-//   }
-//   React.useEffect(()=>{
-//     if(successmsg){
-//       navigate('/createPin')
-//     }
-//   },[navigate,successmsg])
+  const dispatch = useDispatch()
+  const successmsg = useSelector((state=>state.auth.successmsg))
+  const signUpRequest = (val) => {
+    const request = {username:val.username,email:val.email,password:val.password}
+    if(val.email===''&&val.password===''){
+      window.alert('Write Your Email and Password')
+    }else{
+      dispatch(costumeEmail(val.email))
+      dispatch(register(request))
+    }
+  }
+  React.useEffect(()=>{
+    if(successmsg){
+      Router.push('auth/Login')
+    }
+  },[successmsg])
   return (
     <>
       <Head>
@@ -96,7 +92,7 @@ const SignUp = () => {
             <div>
               <p className="auth-text-form mt-5">Transfering money is eassier than ever, you can access STD iWallet wherever you are. Desktop, laptop, mobile phone? we cover all of that for you!</p>
             </div>
-            <Formik validationSchema={signupSchema} initialValues={{username:'',email:'',password:''}}>
+            <Formik validationSchema={signupSchema} initialValues={{username:'',email:'',password:''}} onSubmit={signUpRequest}>
               {(props)=><AuthSignUp{...props}/>}
             </Formik>
 

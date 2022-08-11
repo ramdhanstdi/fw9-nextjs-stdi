@@ -1,14 +1,15 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import qs from 'qs'
-import http from '../../helpers/http';
+import axios from '../../helpers/http';
 
 export const login = createAsyncThunk('profile/login', async(request)=>{
   const results = {}
   try{
     const send = qs.stringify(request)
-    const {data} = await http().post('/auth/login', send)
+    const {data} = await axios.post('/auth/login', request)
     results.token=data.data.token
-    console.log(data);
+    results.id=data.data.id
+    results.pin=data.data.pin
     return results
   }
   catch(e) {
@@ -21,9 +22,8 @@ export const register = createAsyncThunk('profile/register', async(request)=>{
   const results = {}
   try{
     const send = qs.stringify(request)
-    const {data} = await http().post('auth/register',send)
+    const {data} = await axios.post('auth/register',send)
     results.successmsg = data.massage
-    console.log(data);
     return results
   }
   catch(e){
@@ -41,7 +41,7 @@ export const createpin = createAsyncThunk('profile/createpin',async(request)=>{
   const results = {}
   try{
     const send = qs.stringify(request)
-    const {data} =await http().post('auth/createPin',send,{headers:{'content-type': 'application/x-www-form-urlencoded'}})
+    const {data} =await axios.post('auth/createPin',send)
     results.successmsg = data.message
     return results
   }

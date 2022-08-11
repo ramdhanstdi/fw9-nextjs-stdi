@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { editprofile, showProfile } from '../asyncAction/profile';
 
 const initialState = {
-  value:{},
+  value:[],
   balance:{},
   email:'',
   data:{},

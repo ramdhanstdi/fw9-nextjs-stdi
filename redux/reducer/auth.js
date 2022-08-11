@@ -6,7 +6,9 @@ const initialState = {
   token:Cookies.get('token')||null,
   email:'',
   errormsg:'',
-  successmsg:''
+  successmsg:'',
+  id:Cookies.get('id')||null,
+  pin:''
 }
 
 export const auth = createSlice({
@@ -37,9 +39,14 @@ export const auth = createSlice({
     })
     build.addCase(login.fulfilled,(state,action)=>{
       const token = action.payload?.token
+      const id = action.payload?.id
+      const pin = action.payload?.pin
       if(token){
+        state.pin=pin
+        state.id=id
         state.token=token
         Cookies.set('token',token)
+        Cookies.set('id',id)
       }else{
         state.errormsg = action.payload?.errormsg
         state.successmsg = action.payload?.successmsg

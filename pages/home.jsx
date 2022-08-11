@@ -14,19 +14,16 @@ import Head from 'next/head'
 import Image from 'next/image'
 
 const DataDynamic = ({name,transaction,amount,receiver,sender,photo,userid}) => {
-  const data = useSelector((state=>state.getAllProfile.value))
   const dispatch = useDispatch()
-  const urlImage=`http://localhost:3333/public/uploadProfile/${photo}`
-  console.log(transaction);
-  React.useEffect(()=>{
-    dispatch(showAllProfile())
-  },[])
-  console.log(data);
+  const urlImage=`/res.cloudinary.com/${photo}`
   return(
     <>
+    <Head>
+      <title>Home</title>
+    </Head>
       <div className="d-flex justify-content-between align-items-center mt-2 mt-md-5">
         <div className="d-flex justify-content-center">
-          <Image src={photo?urlImage:defaultimg} className="img-home-prof img-fluid" alt="samuel"/>
+          <Image src={photo?urlImage:defaultimg} width={45} height={45} className="img-home-prof img-fluid" alt="samuel"/>
           <div className="d-flex-column justify-content-center mx-3">
             <p className="wrap-name-transfer">{name}</p>
             <p  className="wrap-type">{transaction}</p>
@@ -41,13 +38,15 @@ const DataDynamic = ({name,transaction,amount,receiver,sender,photo,userid}) => 
 }
 
 const Home = () => {
-  const data = useSelector((state=>state.profile.value))
+  const profile = useSelector((state=>state.profile?.value))
+  const data = profile?Object.values(profile):null
   const dataHistory = useSelector((state=>state.history.value))
-  const token = useSelector((state=>state.auth.token))
+  console.log(dataHistory);
+  const id = useSelector((state=>state.auth.id))
   const dispatch = useDispatch()
   React.useEffect(()=>{
-    dispatch(showProfile(token))
-    dispatch(showHistory({token}))
+    dispatch(showProfile(id))
+    dispatch(showHistory({id}))
   },[])
   return (
     <Dashboard>
@@ -57,27 +56,29 @@ const Home = () => {
                   <div className='wrap-details d-flex justify-content-between'>
                     <div className="wrap-info">
                       <p>Balance</p>
-                      {data?.result?.map((val)=>{
-                        dispatch(balance(val.balance))
-                        return(
-                          <>
-                            <h1>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(parseInt(val.balance))}</h1>
-                            <p>{val.num_phone}</p>
-                          </>
-                        )
+                      {data?.map((val)=>{
+                        if(val.id){
+                          dispatch(balance(val.balance))
+                          return(
+                            <>
+                              <h1>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(parseInt(val.balance))}</h1>
+                              <p>{val.noTelp}</p>
+                            </>
+                          )
+                        }
                       })}
                     </div>
                     <div>
-                      <Link href='/transfer' className="d-flex justify-content-around align-items-center wrap-transfer mt-4 mx-3 mx-md-4">
-                        <div>
+                      <Link href='/transfer'>
+                        <div  className="d-flex justify-content-around align-items-center wrap-transfer mt-4 mx-3 mx-md-4">
                           <FiArrowUp className="wrap-i d-none d-md-flex navboard-icons"/>
                           <p className="link-balance text-center my-0">Transfer</p>
                         </div>
                       </Link>
-                      <Link href='/topUp' className="d-flex justify-content-around align-items-center wrap-topup mt-4 mx-3 mx-md-4">
-                        <div>
-                        <FiPlus className="wrap-i d-none d-md-flex navboard-icons"/>
-                        <p className="link-balance text-center my-0">TopUp</p>
+                      <Link href='/topUp'>
+                        <div  className="d-flex justify-content-around align-items-center wrap-topup mt-4 mx-3 mx-md-4">
+                          <FiPlus className="wrap-i d-none d-md-flex navboard-icons"/>
+                          <p className="link-balance text-center my-0">TopUp</p>
                         </div>
                       </Link>
                     </div>
@@ -113,10 +114,10 @@ const Home = () => {
                       <Link href="/history" className="see-all">See all</Link>
                     </div>
                   </div>
-                  {dataHistory?.result?.map((val,index)=>{
+                  {dataHistory?.data?.map((val,index)=>{
                     return(
                       <>
-                        <DataDynamic key={index} receiver={val.receiver_id} name={val.sender_id?val.first_name+' '+val.last_name:val.notes} transaction={val.transfertype} amount={val.amount} sender={val.sender_id} photo={val.profile_photo} userid={val.user_id}/>
+                        <DataDynamic key={index} receiver={val.receiver_id} name={val.sender_id?val.firstName+' '+val.lastName:val.type} transaction={val.status} amount={val.amount} sender={val.sender_id} photo={val.profile_photo} userid={val.user_id}/>
                       </>
                     )
                   })}

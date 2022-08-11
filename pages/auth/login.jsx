@@ -52,6 +52,8 @@ const AuthLogin = ({errors,handleSubmit,handleChange}) =>{
 const Login = () => {
   const dispatch = useDispatch()
   const token = useSelector((state=>state.auth.token))
+  const pin = useSelector((state=>state.auth.pin))
+  console.log(pin);
   const error = useSelector((state=>state.auth.errormsg))
   
   if(error){
@@ -59,7 +61,6 @@ const Login = () => {
   }
 
   const loginRequest = (val) => {
-    console.log(val);
     const request = {email:val.email,password:val.password}
     if(val.email===''&&val.password===''){
       window.alert('Write Your Email and Password')
@@ -69,10 +70,12 @@ const Login = () => {
   }
   
   React.useEffect(()=>{
-    if (token) {
+    if (pin) {
       Router.push('/home');
+    }else if(token){
+      Router.push('/auth/CreatePin');
     }
-  }, [token]);
+  }, [token,pin]);
   
   return (
     <>
