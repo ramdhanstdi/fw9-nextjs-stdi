@@ -24,8 +24,8 @@ export default function Home() {
         <div className="header">
           <p className="title">STD iWallet</p>
           <div className="togle">
-            <Button className="login" onClick={()=>{router.push('/login')}}><span>Login</span></Button>
-            <Button className="signUp" onClick={()=>{router.push('/signUp')}}><span>Sign in</span></Button>
+            <Button className="login" onClick={()=>{router.push('/auth/Login')}}><span>Login</span></Button>
+            <Button className="signUp" onClick={()=>{router.push('/auth/SignUp')}}><span>Sign in</span></Button>
           </div>
         </div>
       </div>
@@ -37,7 +37,7 @@ export default function Home() {
           <div className='awesome-text'>
             <p className="awesome-title" >Awesome App For Saving <span className="awesome-title-span">Time.</span></p>
             <p className="awesome-desc"> We bring you a mobile app for banking problems that oftenly wasting much of your times.</p>
-            <Button className="tryIt" onClick={()=>{router.push('/signUp')}}><span>Try It Free</span></Button><br/><br/>
+            <Button className="tryIt" onClick={()=>{router.push('/auth/SignUp')}}><span>Try It Free</span></Button><br/><br/>
             <Image className='Image-download' src={download}alt="download"/>
           </div>
         </div>
