@@ -2,9 +2,13 @@ import { Alert, Button, Col, Form, Row } from 'react-bootstrap';
 import { FiMail,FiLock } from 'react-icons/fi';
 import React from 'react'
 import Auth from '../../component/Auth'
-import { Link, useLocation, useNavigate } from 'next/link';
+import Link from 'next/link';
 import { Formik } from 'formik';
 import * as Yup from 'yup'
+import Head from 'next/head';
+import { useDispatch,useSelector } from 'react-redux';
+import { login } from '../../redux/asyncAction/auth';
+import Router from 'next/router';
 
 const loginSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email address format').required('Required'),
@@ -12,7 +16,7 @@ const loginSchema = Yup.object().shape({
 })
 
 const AuthLogin = ({errors,handleSubmit,handleChange}) =>{
-  // const dispatch = useDispatch()
+  const dispatch = useDispatch()
   let lock = true
   lock = errors.email!==undefined||errors.password!==undefined
   return(
@@ -35,7 +39,7 @@ const AuthLogin = ({errors,handleSubmit,handleChange}) =>{
         </Form.Group>
         
         <div className="text-end mt-2">
-          <Link to="/forgotPassword">Forgot password?</Link>
+          <Link href="/forgotPassword">Forgot password?</Link>
         </div>
         <div>
           <Button disabled={lock} className="auth-button w-100 mt-5" type="submit">Login</Button>
@@ -46,43 +50,41 @@ const AuthLogin = ({errors,handleSubmit,handleChange}) =>{
 }
 
 const Login = () => {
-    // const dispatch = useDispatch()
-  // const location = useLocation()
-  // const navigate = useNavigate()
-  // const token = useSelector((state=>state.auth.token))
-  // const error = useSelector((state=>state.auth.errormsg))
+  const dispatch = useDispatch()
+  const token = useSelector((state=>state.auth.token))
+  const error = useSelector((state=>state.auth.errormsg))
   
-  // if(error){
-  //   window.alert(error)
-  // }
+  if(error){
+    window.alert(error)
+  }
 
-  // const loginRequest = (val) => {
-  //   const request = {email:val.email,password:val.password}
-  //   if(val.email===''&&val.password===''){
-  //     window.alert('Write Your Email and Password')
-  //   }else{
-  //     dispatch(loginemail(val.email))
-  //     dispatch(login(request))
-  //   }
-  // }
+  const loginRequest = (val) => {
+    console.log(val);
+    const request = {email:val.email,password:val.password}
+    if(val.email===''&&val.password===''){
+      window.alert('Write Your Email and Password')
+    }else{
+      dispatch(login(request))
+    }
+  }
   
-  // React.useEffect(()=>{
-  //   if (token) {
-  //     navigate('/home');
-  //   }
-  // }, [navigate, token]);
+  React.useEffect(()=>{
+    if (token) {
+      Router.push('/home');
+    }
+  }, [token]);
   
   return (
     <>
       {/* {location.state?.errormsg&&(
         <Alert className="sticky-top text-center" variant="danger">{location.state.errormsg}</Alert>
       )} */}
-      {/* <Head>
+      <Head>
         <meta charSet="utf-8" />
         <title>Login</title>
-      </Head> */}
+      </Head>
       <Row className="mw-100 mh-100 mx-0">
-        {/* <Auth/> */}
+        <Auth/>
         <Col md={5} className='p-4 p-md-5'>
           <div className="d-flex-column me-0 me-md-5">
             <div>
@@ -91,11 +93,11 @@ const Login = () => {
             <div>
               <p className="auth-text-form mt-5">Transfering money is eassier than ever, you can access STD iWallet wherever you are. Desktop, laptop, mobile phone? we cover all of that for you!</p>
             </div>
-            <Formik validationSchema={loginSchema} initialValues={{email:'',password:''}} >
+            <Formik validationSchema={loginSchema} initialValues={{email:'',password:''}} onSubmit={loginRequest} >
               {(props)=><AuthLogin {...props}/>}
             </Formik>
             <div className="text-center">
-              {/* <p className="mt-5">Don’t have an account? Let’s <Link href="/signUp">Sign Up</Link></p> */}
+              <p className="mt-5">Don’t have an account? Let’s <Link href="/auth/SignUp">Sign Up</Link></p>
             </div>
           </div>
         </Col>

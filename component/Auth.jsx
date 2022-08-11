@@ -1,6 +1,7 @@
 import { Col} from 'react-bootstrap';
 import React from 'react'
 import Link from 'next/link';
+import phone from '../public/images/image.png'
 import Image from 'next/image';
 
 const Auth = () => {
@@ -12,8 +13,8 @@ const Auth = () => {
             <span className="auth-title">STD iWallet</span>
           </Link>
         </div>
-        <div className="ms-0 ms-md-5">
-          <Image src='/images/image.png' layout='fill' className="img-fluid d-none d-md-flex" alt=""/>
+        <div className="ms-0 ms-md-5 ">
+          <Image src={phone} className={"img-fluid"} alt="display"/>
         </div>
         <div className="ms-0 ms-md-5">
           <h3 className="auth-h3">App that Covering Banking Needs.</h3>

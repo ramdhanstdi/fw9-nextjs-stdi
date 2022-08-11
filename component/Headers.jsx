@@ -1,8 +1,8 @@
 import {Col,Row,Dropdown} from 'react-bootstrap';
 import React from 'react'
-import defaultimg from '../assets/images/default.png'
+import defaultimg from '../public/images/default.png'
 import {FiBell,FiArrowUp,FiArrowDown} from 'react-icons/fi'
-import {useDispatch, useSelector } from 'react-redux/es/exports'
+import {useDispatch, useSelector } from 'react-redux'
 import { showProfile } from '../redux/asyncAction/profile'
 import Image from 'next/image';
 

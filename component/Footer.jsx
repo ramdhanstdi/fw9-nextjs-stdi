@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const Footer = () => {
+const Footer = () => {
   return (
     <footer className="wrap-end mt-5">
       <div className="d-flex justify-content-between wrap-footer px-3 px-md-5 mx-0 mx-md-5">
@@ -13,3 +13,5 @@ export const Footer = () => {
     </footer>
   )
 }
+
+export default Footer
