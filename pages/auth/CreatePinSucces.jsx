@@ -5,8 +5,14 @@ import Link from 'next/link';
 import success from '../../public/images/success.png'
 import Head from 'next/head';
 import Image from 'next/image';
+import { logout } from '../../redux/reducer/auth';
 
 const CreatePinSuccess = () => {
+  const logOut =()=>{
+    dispatch(logout(()=>{
+      router.push('/login')
+    }))
+  }
   return (
     <>
       <Head>
@@ -27,9 +33,7 @@ const CreatePinSuccess = () => {
               <p className="auth-text-form mt-5">Your PIN was successfully created and you can now access all the features in Zwallet. Login to your new account and start exploring!</p>
             </div>
             <div>
-              <Link href="/home">
-                <Button className="auth-button w-100" type="submit">Login Now</Button>
-              </Link>
+              <Button onClick={logOut} className="auth-button w-100" type="submit">Login Now</Button>
             </div>
           </div>
         </Col>

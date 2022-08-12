@@ -7,7 +7,6 @@ import { useDispatch,useSelector } from 'react-redux';
 import { createpin } from '../../redux/asyncAction/auth';
 import Head from 'next/head'
 import router from 'next/router';
-import Router from 'next/router';
 
 const pinSchema = Yup.object().shape({
   pin1: Yup.string().min(1).max(1).required(),
@@ -52,22 +51,24 @@ const AuthPin = ({errors,handleSubmit,handleChange}) => {
 }
 
 const CreatePin = () => {
-  const email = useSelector((state)=>state.auth.email)
+  const id = useSelector((state=>state.auth.id))
   const token = useSelector((state=>state.auth.token))
   const dispatch = useDispatch()
-  if(!token){
-    Router.push('/auth/Login')
-  }
+  React.useEffect(()=>{
+    if(!token){
+      router.push('/auth/Login');
+    }
+  }, [token]);
+
   const pinRequest = (val) => {
-    const pin = val.pin1+val.pin2+val.pin3+val.pin4+val.pin5+val.pin6
+    const number = val.pin1+val.pin2+val.pin3+val.pin4+val.pin5+val.pin6
     const regExp = /^\d+$/;
-    const request = {email,pin}
-    if(regExp.test(pin)){
-      if (pin.length!==6) {
+    if(regExp.test(number)){
+      if (number.length!==6) {
         window.alert('Pin Should Have 6 Digit')
       }else{
-        dispatch(createpin(request))
-        router.push('/createPinSuccess')
+        dispatch(createpin({id,number}))
+        router.push('/auth/CreatePinSuccess')
       }
     }else{
       window.alert('Input Only Number')

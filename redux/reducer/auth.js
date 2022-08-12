@@ -17,6 +17,7 @@ export const auth = createSlice({
   reducers: {
     logout: (state,action) => {
       Cookies.remove('token');
+      Cookies.remove('id')
       state.token=null
     },
     costumeEmail:(state,action)=>{

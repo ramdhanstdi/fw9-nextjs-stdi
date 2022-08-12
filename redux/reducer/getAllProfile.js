@@ -3,7 +3,7 @@ import { showAllProfile } from '../asyncAction/getAllProfile';
 
 
 const initialState = {
-  value:{}
+  value:[]
 }
 
 export const getAllProfile = createSlice({
@@ -11,6 +11,9 @@ export const getAllProfile = createSlice({
   initialState,
   reducers:{},
   extraReducers:(build)=>{
+    build.addCase(showAllProfile.pending,(state,action)=>{
+      state.value=null
+    }),
     build.addCase(showAllProfile.fulfilled,(state,action)=>{
       state.value=action.payload
     })

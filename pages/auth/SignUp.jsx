@@ -7,13 +7,14 @@ import { Formik } from 'formik';
 import * as Yup from 'yup'
 import Head from 'next/head';
 import { useSelector,useDispatch } from 'react-redux';
-import { register } from '../redux/asyncAction/auth';
+import { register } from '../../redux/asyncAction/auth';
 import Router from 'next/router';
 
 const signupSchema = Yup.object().shape({
-  username: Yup.string().min(5).required('Required'),
+  firstName: Yup.string().min(1).required('Required'),
+  lastName: Yup.string().min(1).required('Required'),
   email: Yup.string().email('Invalid email address format').required('Required'),
-  password: Yup.string().min(8).required('Required')
+  password: Yup.string().min(3).required('Required')
 })
 
 const AuthSignUp = ({errors,handleChange,handleSubmit}) => {
@@ -24,15 +25,23 @@ const AuthSignUp = ({errors,handleChange,handleSubmit}) => {
     }
   },[success])
   let lock = true
-  lock = errors.email!==undefined||errors.password!==undefined||errors.username!==undefined
+  lock = errors.email!==undefined||errors.password!==undefined||errors.firstName!==undefined||errors.lastName!==undefined
   return(
     <>
       <Form onSubmit={handleSubmit}>
         <Form.Group className="d-flex mt-5">
           <span className="auth-form"> <FiUser/> </span>
           <div className="d-flex-column w-100">
-            <Form.Control name="username" onChange={handleChange} className="auth-form" type="text" placeholder="Enter Your Username" isInvalid={!!errors.username}/>
-            <Form.Control.Feedback type="invalid">{errors.username}</Form.Control.Feedback>
+            <Form.Control name="firstName" onChange={handleChange} className="auth-form" type="text" placeholder="Enter Your First Name" isInvalid={!!errors.firstName}/>
+            <Form.Control.Feedback type="invalid">{errors.firstName}</Form.Control.Feedback>
+          </div>
+        </Form.Group>
+
+        <Form.Group className="d-flex mt-5">
+          <span className="auth-form"> <FiUser/> </span>
+          <div className="d-flex-column w-100">
+            <Form.Control name="lastName" onChange={handleChange} className="auth-form" type="text" placeholder="Enter Your Last Name" isInvalid={!!errors.lastName}/>
+            <Form.Control.Feedback type="invalid">{errors.lastName}</Form.Control.Feedback>
           </div>
         </Form.Group>
 
@@ -63,11 +72,10 @@ const SignUp = () => {
   const dispatch = useDispatch()
   const successmsg = useSelector((state=>state.auth.successmsg))
   const signUpRequest = (val) => {
-    const request = {username:val.username,email:val.email,password:val.password}
+    const request = {firstName:val.firstName,lastName:val.lastName,email:val.email,password:val.password}
     if(val.email===''&&val.password===''){
       window.alert('Write Your Email and Password')
     }else{
-      dispatch(costumeEmail(val.email))
       dispatch(register(request))
     }
   }
@@ -92,7 +100,7 @@ const SignUp = () => {
             <div>
               <p className="auth-text-form mt-5">Transfering money is eassier than ever, you can access STD iWallet wherever you are. Desktop, laptop, mobile phone? we cover all of that for you!</p>
             </div>
-            <Formik validationSchema={signupSchema} initialValues={{username:'',email:'',password:''}} onSubmit={signUpRequest}>
+            <Formik validationSchema={signupSchema} initialValues={{firstName:'',lastName:'',email:'',password:''}} onSubmit={signUpRequest}>
               {(props)=><AuthSignUp{...props}/>}
             </Formik>
 
