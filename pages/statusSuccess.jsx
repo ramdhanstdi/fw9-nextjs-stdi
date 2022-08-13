@@ -8,8 +8,48 @@ import { resetNotes } from '../redux/reducer/notes'
 import Head from 'next/head'
 import Dashboard from '../component/Dashboard'
 import Link from 'next/link'
+import cookies from 'next-cookies'
+import axiosServer from '../helpers/httpServer'
+import defaultimg from '../public/images/default.png'
+import Image from 'next/image'
 
-export const StatusSuccess = () => {
+export async function getServerSideProps(context) {
+  try {
+    const dataCookie = cookies(context);
+    const result = await axiosServer.get(
+      `user/profile/${dataCookie.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${dataCookie.token}`,
+        },
+      }
+    );
+    return {
+      props: {
+        data: result.data,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    if (error.response.status === 403) {
+      return {
+        redirect: {
+          destination: "/auth/login",
+          permanent: false,
+        },
+      };
+    } else {
+      return {
+        props: {
+          isError: true,
+          msg: error.response,
+        },
+      };
+    }
+  }
+}
+
+const StatusSuccess = (props) => {
   const dispatch = useDispatch()
   const dataName = useSelector((state=>state.transfer.name))
   const dataPhone = useSelector((state=>state.transfer.phone))
@@ -25,12 +65,12 @@ export const StatusSuccess = () => {
         <meta charSet="utf-8" />
         <title>Success</title>
       </Head>
-      <Dashboard>
+      <Dashboard data={props.data}>
       <Row>
           <Col md={9} className='d-flex flex-column mt-3 w-100'>
             <div className='wrap-right-el d-flex-column px-3 px-md-4 pt-3 pt-md-4'>
               <div className='w-100 text-center my-5'>
-                <img src={success} alt='success'/>
+                <Image src={success} width={50} height={50} alt='success'/>
                 <p className="wrap-status-transfer my-5">Transfer Success</p>
               </div>
               <div className="d-flex-column wrap-receiver p-3 my-3">
@@ -77,7 +117,7 @@ export const StatusSuccess = () => {
               <div className="d-flex-column wrap-receiver p-3 my-3">
                 <div className="d-flex justify-content-between align-items-center">
                   <div className="d-flex">
-                    <img src={dataPhoto} className="img-home-prof" alt="samuel"/>
+                    <img src={dataPhoto?dataPhoto:defaultimg} className="img-home-prof" alt="samuel"/>
                     <div className="d-flex-column justify-content-center ms-3">
                       <p className="wrap-name-transfer">{dataName}</p>
                       <p  className="wrap-type">{dataPhone}</p>
@@ -103,3 +143,5 @@ export const StatusSuccess = () => {
     </>
   )
 }
+
+export default StatusSuccess

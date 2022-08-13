@@ -6,9 +6,9 @@ import {useDispatch, useSelector } from 'react-redux'
 import { showProfile } from '../redux/asyncAction/profile'
 import Image from 'next/image';
 
-const Header = () => {
+const Header = (props) => {
   const profile = useSelector((state=>state.profile?.value))
-  const data = profile?Object.values(profile):null
+  const data = Object.values(props.data.data)
   const id = useSelector((state=>state.auth.id))
   const dispatch = useDispatch()
   React.useEffect(()=>{
@@ -25,8 +25,7 @@ const Header = () => {
         <Col md={5}>
           <div className="d-flex justify-content-between justify-content-md-end align-items-center wrap-profile ps-3 px-md-3 mx-2 mx-md-3">
             {data?.map((val)=>{
-              console.log(val);
-              const urlImage=`/res.cloudinary.com/${val.image}`
+              const urlImage=`/res.cloudinary.com/dd1uwz8eu/image/upload/v1659549135/${val.image}`
               if(val.id){
                 return(
                   <>
@@ -41,7 +40,7 @@ const Header = () => {
                 )
               }
             })}
-            <Dropdown>
+            <Dropdown className='me-4'>
               <Dropdown.Toggle className="w-100 wrap-bg-button wrap-header-button" type="button">
                 <FiBell className="wrap-nav-dashboard wrap-header-button"/>
               </Dropdown.Toggle>

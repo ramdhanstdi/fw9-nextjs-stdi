@@ -8,6 +8,44 @@ import { changePassword } from '../redux/asyncAction/changePassword'
 import Dashboard from '../component/Dashboard'
 import Head from 'next/head';
 import Router from 'next/router';
+import cookies from 'next-cookies'
+import axiosServer from '../helpers/httpServer'
+
+export async function getServerSideProps(context) {
+  try {
+    const dataCookie = cookies(context);
+    const result = await axiosServer.get(
+      `user/profile/${dataCookie.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${dataCookie.token}`,
+        },
+      }
+    );
+    return {
+      props: {
+        data: result.data,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    if (error.response.status === 403) {
+      return {
+        redirect: {
+          destination: "/auth/login",
+          permanent: false,
+        },
+      };
+    } else {
+      return {
+        props: {
+          isError: true,
+          msg: error.response,
+        },
+      };
+    }
+  }
+}
 
 const passwordSchema = Yup.object().shape({
   currentpassword:Yup.string().required('Required'),
@@ -54,7 +92,7 @@ const AuthPassword = ({errors,handleChange,handleSubmit}) =>{
   )
 }
 
-const ChangePassword = () => {
+const ChangePassword = (props) => {
   const dispatch = useDispatch
   const token = useSelector((state=>state.auth.token))
   const changePasswordRequest = (val) => {
@@ -74,7 +112,7 @@ const ChangePassword = () => {
         <meta charSet="utf-8" />
         <title>Change Password</title>
       </Head>
-      <Dashboard>
+      <Dashboard data={props.data}>
         <Row>
           <Col md={9} className='d-flex flex-column mt-3 w-100'>
             <div className='wrap-right-el d-flex-column px-3 px-md-4 pt-3 pt-md-4'>

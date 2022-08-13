@@ -620,7 +620,27 @@ body.modal-open{
     box-shadow: 0px 6px 75px rgb(100 87 87 / 5%);
 }
 
+.wrap-search-input{
+    width: 100%;
+    background: #e8e8e8 !important;
+    color: #a9a9a9;
+    border-radius: unset !important;
+    -webkit-border-radius: unset !important;
+    -moz-border-radius: unset !important;
+    -ms-border-radius: unset !important;
+    -o-border-radius: unset !important;
+}
+
 @media (max-width: 767.98px) {
+    .modal-dialog {
+        position: absolute!important;
+        top: unset!important;
+        right: unset!important;
+        left: unset !important;
+        z-index: 10040;
+        overflow: auto;
+        overflow-y: auto;
+    }
 
     .modal-body {
         max-width: 350px!important;

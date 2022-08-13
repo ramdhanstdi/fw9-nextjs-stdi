@@ -1,12 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import qs from 'qs'
-import http from '../../helpers/http'
+import axios from '../../helpers/http'
 
-export const addPhone = createAsyncThunk('profile/addPhone',async({token,num_phone})=>{
+export const addPhone = createAsyncThunk('profile/addPhone',async({id,noTelp})=>{
   const results = {}
   try{
-    const send = qs.stringify({num_phone})
-    const {data} = await http(token).patch('/profile',send,{headers:{'Content-Type': 'application/x-www-form-urlencoded' }})
+    const {data} = await axios.patch(`/user/profile/${id}`,{noTelp})
+    console.log(data);
     results.successmsg=data.massage
     return results
   }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Col, Row } from 'react-bootstrap'
+import { Button, Col, Form, Modal, Row } from 'react-bootstrap'
 import { FiArrowUp, FiPlus } from 'react-icons/fi'
 import graph from '../public/images/graphic.png'
 import defaultimg from '../public/images/default.png'
@@ -11,10 +11,98 @@ import { showHistory } from '../redux/asyncAction/history'
 import { balance } from '../redux/reducer/profile'
 import Head from 'next/head'
 import Image from 'next/image'
+import cookies from 'next-cookies'
+import axiosServer from '../helpers/httpServer'
+import { Formik } from 'formik'
+import * as Yup from 'yup'
+import { topUp } from '../redux/asyncAction/transfer';
+
+export async function getServerSideProps(context) {
+  try {
+    const dataCookie = cookies(context);
+    const result = await axiosServer.get(
+      `user/profile/${dataCookie.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${dataCookie.token}`,
+        },
+      }
+    );
+    return {
+      props: {
+        data: result.data,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    if (error.response.status === 403) {
+      return {
+        redirect: {
+          destination: "/auth/login",
+          permanent: false,
+        },
+      };
+    } else {
+      return {
+        props: {
+          isError: true,
+          msg: error.response,
+        },
+      };
+    }
+  }
+}
+
+const amountSchema = Yup.object().shape({
+  topup: Yup.number().min(20000).required('Required'),
+})
+
+const FormTopUp = ({errors, handleSubmit, handleChange}) =>{
+  return(
+    <>
+     <Form onSubmit={handleSubmit}>
+        <Modal.Body>
+          <p className='wrap-text'>Input Your Name and Upload Your Profile</p>
+          <div className="d-flex flex-column justify-content-around wrapper-pin mw-100 gap-2 mt-5">
+            <div className="d-flex auth-border-pin">
+              <Form.Control name='topup' onChange={handleChange} placeholder='Input Amount' isInvalid={!!errors.topup}/>
+              <Form.Control.Feedback>{errors.topup}</Form.Control.Feedback>
+            </div>
+          </div>
+          <br/>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button name='button-confirm' className='auth-button' type='submit'>Confirm</Button>
+        </Modal.Footer>
+      </Form>
+    </>
+  )
+}
+
+const MyModal = (props) => {
+  const dispatch = useDispatch()
+  const setTopUp = (val) =>{
+    dispatch(topUp({amount:val.topup}))
+  }
+  return(
+    <>
+      <Modal {...props} aria-labelledby="modal-pin" centered className='mx-auto'>
+        <Modal.Header closeButton>
+          <Modal.Title id="modal-pin" className='wrap-title'>
+                Enter Your Saldo
+          </Modal.Title>
+        </Modal.Header>
+          <Formik onSubmit={setTopUp} initialValues={{topup:''}} validationSchema={amountSchema}>
+            {(props)=><FormTopUp{...props}/>}
+          </Formik>
+      </Modal>    
+    </>
+  )
+}
 
 const DataDynamic = ({name,transaction,amount,receiver,sender,photo,userid}) => {
   const dispatch = useDispatch()
-  const urlImage=`/res.cloudinary.com/${photo}`
+  const urlImage=`/res.cloudinary.com/dd1uwz8eu/image/upload/v1659549135/${photo}`
   return(
     <>
     <Head>
@@ -36,19 +124,21 @@ const DataDynamic = ({name,transaction,amount,receiver,sender,photo,userid}) => 
   )
 }
 
-const Home = () => {
-  const profile = useSelector((state=>state.profile?.value))
-  const data = profile?Object.values(profile):null
+const Home = (props) => {
+  const [show, setShow] =React.useState(false);
+  const data = Object.values(props.data)
   const dataHistory = useSelector((state=>state.history.value))
-  console.log(dataHistory);
   const id = useSelector((state=>state.auth.id))
   const dispatch = useDispatch()
   React.useEffect(()=>{
-    dispatch(showProfile(id))
     dispatch(showHistory({id}))
   },[])
   return (
-    <Dashboard>
+    <>
+    <Head>
+      <title>Home</title>
+    </Head>
+    <Dashboard data={props.data}>
             <Row>
               <Col className='col-12'>
                 <div className='wrap-balance mt-3'>
@@ -74,8 +164,8 @@ const Home = () => {
                           <p className="link-balance text-center my-0">Transfer</p>
                         </div>
                       </Link>
-                      <Link href='/topUp'>
-                        <div  className="d-flex justify-content-around align-items-center wrap-topup mt-4 mx-3 mx-md-4">
+                      <Link href='#'>
+                        <div onClick={()=>setShow(true)} className="d-flex justify-content-around align-items-center wrap-topup mt-4 mx-3 mx-md-4">
                           <FiPlus className="wrap-i d-none d-md-flex navboard-icons"/>
                           <p className="link-balance text-center my-0">TopUp</p>
                         </div>
@@ -124,6 +214,8 @@ const Home = () => {
               </Col>
             </Row>
     </Dashboard>
+    <MyModal show={show} onHide={()=>setShow(false)}/>
+    </>
   )
 }
 

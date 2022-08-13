@@ -6,6 +6,44 @@ import * as Yup from 'yup'
 import Head from 'next/head';
 import Dashboard from '../component/Dashboard';
 import Router from 'next/router';
+import cookies from 'next-cookies'
+import axiosServer from '../helpers/httpServer'
+
+export async function getServerSideProps(context) {
+  try {
+    const dataCookie = cookies(context);
+    const result = await axiosServer.get(
+      `user/profile/${dataCookie.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${dataCookie.token}`,
+        },
+      }
+    );
+    return {
+      props: {
+        data: result.data,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    if (error.response.status === 403) {
+      return {
+        redirect: {
+          destination: "/auth/login",
+          permanent: false,
+        },
+      };
+    } else {
+      return {
+        props: {
+          isError: true,
+          msg: error.response,
+        },
+      };
+    }
+  }
+}
 
 const pinSchema = Yup.object().shape({
   pin1: Yup.string().min(1).max(1).required(),
@@ -53,7 +91,7 @@ const AuthPin = ({errors,handleSubmit,handleChange}) => {
   )
 }
 
-const ChangePin = () => {
+const ChangePin = (props) => {
   const pinRequest = (val) => {
     const pin = val.pin1+val.pin2+val.pin3+val.pin4+val.pin5+val.pin6
     const regExp = /^\d+$/;
@@ -73,7 +111,7 @@ const ChangePin = () => {
         <meta charSet="utf-8" />
         <title>Change Pin</title>
       </Head>
-      <Dashboard>
+      <Dashboard data={props.data}>
         <Row>
           <Col md={9} className='d-flex flex-column mt-3 w-100'>
             <div className='wrap-right-el d-flex-column px-3 px-md-4 pt-3 pt-md-4'>

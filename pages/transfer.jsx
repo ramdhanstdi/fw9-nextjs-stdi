@@ -11,6 +11,44 @@ import Dashboard from '../component/Dashboard'
 import Head from 'next/head'
 import Image from 'next/image'
 import Router from 'next/router'
+import axiosServer from '../helpers/httpServer'
+import cookies from 'next-cookies'
+
+export async function getServerSideProps(context) {
+  try {
+    const dataCookie = cookies(context);
+    const result = await axiosServer.get(
+      `user/profile/${dataCookie.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${dataCookie.token}`,
+        },
+      }
+    );
+    return {
+      props: {
+        data: result.data,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    if (error.response.status === 403) {
+      return {
+        redirect: {
+          destination: "/auth/login",
+          permanent: false,
+        },
+      };
+    } else {
+      return {
+        props: {
+          isError: true,
+          msg: error.response,
+        },
+      };
+    }
+  }
+}
 
 const SearchProfile = ({errors,handleChange,handleSubmit}) =>{
   const dispatch = useDispatch()
@@ -24,21 +62,21 @@ const SearchProfile = ({errors,handleChange,handleSubmit}) =>{
       <Form onSubmit={handleSubmit}>
         <Form.Group className="d-flex mt-4">
           <span className="wrap-search rounded-start"> <FiSearch className='ms-2'/> </span>
-          <Form.Control className="wrap-search rounded-end" onChange={(e)=>dispatch(searchNum(e.target.value))} name='search' type="text" placeholder="Search Receiver"/>
+          <Form.Control className="wrap-search-input" onChange={(e)=>dispatch(searchNum(e.target.value))} name='search' type="text" placeholder="Search Receiver"/>
         </Form.Group>
       </Form>
     </>
   )
 }
 
-const DataDynamic = ({id,name,num_phone,photo,user_id}) => {
-  const urlImage=`/res.cloudinary.com/${photo}`
+const DataDynamic = ({id,name,num_phone,photo}) => {
+  const urlImage=`https://res.cloudinary.com/dd1uwz8eu/image/upload/v1659549135/${photo}`
   const dispatch = useDispatch()
   const passingData = () => {
     dispatch(costumNameTransfer(name))
     dispatch(costumPhoneTransfer(num_phone))
     dispatch(costumPhotoTransfer(urlImage))
-    dispatch(costumReceiver(user_id))
+    dispatch(costumReceiver(id))
     Router.push('/transferInput')
   }
   return(
@@ -58,7 +96,7 @@ const DataDynamic = ({id,name,num_phone,photo,user_id}) => {
   )
 }
 
-const Transfer = () => {
+const Transfer = (props) => {
   const dataProfile = useSelector((state=>state.getAllProfile.value))
   const dispatch = useDispatch()
   const pages = useSelector((state=>state.counter.num))
@@ -77,7 +115,7 @@ const Transfer = () => {
         <meta charSet="utf-8" />
         <title>Transfer</title>
       </Head>
-      <Dashboard>
+      <Dashboard data={props.data}>
         <Row>
           <Col md={9} className='d-flex flex-column mt-3 w-100'>
             <div className='wrap-right-el d-flex-column px-3 px-md-4 pt-3 pt-md-4'>
@@ -89,7 +127,7 @@ const Transfer = () => {
                 return(
                   <>
                     <React.Fragment >
-                      <DataDynamic id={val.id} user_id={val.user_id} photo={val.image} name={val.firstName+' '+val.lastName} num_phone={val.noTelp}/>
+                      <DataDynamic id={val.id} photo={val.image} name={val.firstName+' '+val.lastName} num_phone={val.noTelp}/>
                     </React.Fragment>
                   </>
                 )

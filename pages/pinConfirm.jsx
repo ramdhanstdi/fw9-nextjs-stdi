@@ -7,6 +7,45 @@ import * as Yup from 'yup'
 import Router from 'next/router'
 import Head from 'next/head'
 import Dashboard from '../component/Dashboard'
+import cookies from 'next-cookies'
+import axiosServer from '../helpers/httpServer'
+import defaultimg from '../public/images/default.png'
+
+export async function getServerSideProps(context) {
+  try {
+    const dataCookie = cookies(context);
+    const result = await axiosServer.get(
+      `user/profile/${dataCookie.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${dataCookie.token}`,
+        },
+      }
+    );
+    return {
+      props: {
+        data: result.data,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    if (error.response.status === 403) {
+      return {
+        redirect: {
+          destination: "/auth/login",
+          permanent: false,
+        },
+      };
+    } else {
+      return {
+        props: {
+          isError: true,
+          msg: error.response,
+        },
+      };
+    }
+  }
+}
 
 const pinSchema = Yup.object().shape({
   pin1: Yup.string().min(1).max(1).required(),
@@ -55,8 +94,8 @@ const AuthPin = ({errors,handleSubmit,handleChange}) => {
 
 const MyModal = (props) => {
   const dispatch = useDispatch()
-  const receiver = useSelector((state=>state.transfer.receiver))
-  const amount = useSelector((state=>state.amount.value))
+  const receiverId = useSelector((state=>state.transfer.receiver))
+  const money = useSelector((state=>state.amount.value))
   const notes = useSelector((state=>state.notes.value))
   const time = useSelector((state=>state.transfer.date))
   const token = useSelector((state=>state.auth.token))
@@ -70,7 +109,7 @@ const MyModal = (props) => {
       if (pin.length!==6) {
         window.alert('Pin Should Have 6 Digit')
       }else{
-        dispatch(transfer({token,receiver,amount,notes,time,pin}))
+        dispatch(transfer({token,receiverId,money,notes,time,pin}))
       }
     }else{
       window.alert('Input Only Number')
@@ -104,7 +143,7 @@ const MyModal = (props) => {
   )
 }
 
-const TransferPinConfirm = () => {
+const TransferPinConfirm = (props) => {
   const dataName = useSelector((state=>state.transfer.name))
   const dataPhone = useSelector((state=>state.transfer.phone))
   const dataPhoto = useSelector((state=>state.transfer.photo))
@@ -116,7 +155,7 @@ const TransferPinConfirm = () => {
   const balanceleft = balance-amount
   return (
     <>
-      <Dashboard>
+      <Dashboard data={props.data}>
         <Row>
           <Col md={9} className='d-flex flex-column mt-3 w-100'>
             <div className='wrap-right-el d-flex-column px-3 px-md-4 pt-3 pt-md-4'>
@@ -124,7 +163,7 @@ const TransferPinConfirm = () => {
               <div className="d-flex-column wrap-receiver p-3 my-3">
                 <div className="d-flex justify-content-between align-items-center">
                   <div className="d-flex">
-                    <img src={dataPhoto} className="img-home-prof" alt="samuel"/>
+                    <img src={dataPhoto?dataPhoto:defaultimg} className="img-home-prof" alt="samuel"/>
                     <div className="d-flex-column justify-content-center ms-3">
                       <p className="wrap-name-transfer">{dataName}</p>
                       <p  className="wrap-type">{dataPhone}</p>

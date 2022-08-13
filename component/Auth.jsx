@@ -17,7 +17,7 @@ const Auth = () => {
     <>
       <Col md={7} className='auth-bg d-flex-column justify-content-center mw-100 gap-5 p-4 p-md-5'>
         <div className="ms-0 ms-md-5 mb-5 mb-md-0">
-          <Link href='/login'>
+          <Link href='/auth/Login'>
             <span className="auth-title">STD iWallet</span>
           </Link>
         </div>

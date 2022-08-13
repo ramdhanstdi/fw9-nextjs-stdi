@@ -6,7 +6,7 @@ const nextConfig = {
     REACT_APP_BACK_END_URL:"https://fazzpay.herokuapp.com"
   },
   images: {
-    domains: ["res.cloudinary.com/"]
+    domains: ["res.cloudinary.com"]
   }
 }
 

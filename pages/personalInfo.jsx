@@ -5,10 +5,47 @@ import {useDispatch, useSelector } from 'react-redux'
 import { showProfile } from '../redux/asyncAction/profile'
 import Head from 'next/head'
 import Dashboard from '../component/Dashboard'
+import axiosServer from '../helpers/httpServer'
+import cookies from 'next-cookies'
 
-const PersonalInfo = () => {
-  const profile = useSelector((state=>state.profile?.value))
-  const data = profile?Object.values(profile):null
+export async function getServerSideProps(context) {
+  try {
+    const dataCookie = cookies(context);
+    const result = await axiosServer.get(
+      `user/profile/${dataCookie.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${dataCookie.token}`,
+        },
+      }
+    );
+    return {
+      props: {
+        data: result.data,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    if (error.response.status === 403) {
+      return {
+        redirect: {
+          destination: "/auth/login",
+          permanent: false,
+        },
+      };
+    } else {
+      return {
+        props: {
+          isError: true,
+          msg: error.response,
+        },
+      };
+    }
+  }
+}
+
+const PersonalInfo = (props) => {
+  const data = Object.values(props.data)
   const id = useSelector((state=>state.auth.id))
   const dispatch = useDispatch()
   React.useEffect(()=>{
@@ -20,7 +57,7 @@ const PersonalInfo = () => {
         <meta charSet="utf-8" />
         <title>Personal Info</title>
       </Head>
-      <Dashboard>
+      <Dashboard data={props.data}>
           <Col md={9} className='d-flex flex-column mt-3 w-100'>
             {data?.map((val)=>{
               const firstname = val.firstName?.split(' ').map(str =>str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()).join(' ')

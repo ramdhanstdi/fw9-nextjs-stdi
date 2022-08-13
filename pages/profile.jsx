@@ -10,6 +10,44 @@ import Head from 'next/head'
 import Dashboard from '../component/Dashboard'
 import Image from 'next/image'
 import { logout } from '../redux/reducer/auth'
+import cookies from 'next-cookies'
+import axiosServer from '../helpers/httpServer'
+
+export async function getServerSideProps(context) {
+  try {
+    const dataCookie = cookies(context);
+    const result = await axiosServer.get(
+      `user/profile/${dataCookie.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${dataCookie.token}`,
+        },
+      }
+    );
+    return {
+      props: {
+        data: result.data,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    if (error.response.status === 403) {
+      return {
+        redirect: {
+          destination: "/auth/login",
+          permanent: false,
+        },
+      };
+    } else {
+      return {
+        props: {
+          isError: true,
+          msg: error.response,
+        },
+      };
+    }
+  }
+}
 
 const FormUpdate=({erros,handleSubmit,handleChange,handleFileSelect})=>{
   const data = useSelector((state=>state.profile.value))
@@ -80,7 +118,7 @@ const MyModal = (props) => {
   )
 }
 
-const Profile = () => {
+const Profile = (props) => {
   const profile = useSelector((state=>state.profile?.value))
   const data = profile?Object.values(profile):null
   const id = useSelector((state=>state.auth.id))
@@ -105,13 +143,13 @@ const Profile = () => {
         <meta charSet="utf-8" />
         <title>Profile</title>
       </Head>
-        <Dashboard>
+        <Dashboard data={props.data}>
         <Row>
           <Col md={9} className='d-flex flex-column mt-3 w-100'>
             <div className='wrap-right-el d-flex-column px-3 px-md-4 pt-3 pt-md-4'>
               <div className="w-100 text-center my-3 my-md-5">
                 {data?.map((val)=>{
-                  const urlImage=`/res.cloudinary.com/${val.image}`
+                  const urlImage=`/res.cloudinary.com/dd1uwz8eu/image/upload/v1659549135/${val.image}`
                   if(val.id){
                       return(
                         <>
