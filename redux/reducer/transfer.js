@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { transfer } from '../asyncAction/transfer'
+import Router from 'next/router'
+import { checkkPin, transfer } from '../asyncAction/transfer'
 
 const initialState = {
   receiver:'',
@@ -8,7 +9,9 @@ const initialState = {
   photo:'',
   date:'',
   errormsg:'',
-  successmsg:''
+  successmsg:'',
+  errorpin:'',
+  successpin:''
 }
 
 export const transferSlice = createSlice({
@@ -35,6 +38,12 @@ export const transferSlice = createSlice({
       state.phone = ''
       state.photo = ''
       state.data = ''
+    },
+    resetMsg:(state)=>{
+      state.successmsg=null
+      state.successpin=null
+      state.errormsg=null
+      state.errorpin=null
     }
   },
   extraReducers: (build)=>{
@@ -46,9 +55,17 @@ export const transferSlice = createSlice({
       state.errormsg=action.payload?.errormsg
       state.successmsg=action.payload?.successmsg
     })
+    build.addCase(checkkPin.pending,(state)=>{
+      state.errorpin=null
+      state.successpin=null
+    })
+    build.addCase(checkkPin.fulfilled,(state,action)=>{
+      state.errorpin=action.payload?.errorpin
+      state.successpin=action.payload?.successpin
+    })
   }
 })
 
-export const {costumPhotoTransfer,costumNameTransfer,costumPhoneTransfer,costumDateTransfer,costumReceiver,resetTransfer} = transferSlice.actions
+export const {costumPhotoTransfer,costumNameTransfer,costumPhoneTransfer,costumDateTransfer,costumReceiver,resetTransfer,resetMsg} = transferSlice.actions
 
 export default transferSlice.reducer

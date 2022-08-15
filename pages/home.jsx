@@ -28,13 +28,22 @@ export async function getServerSideProps(context) {
         },
       }
     );
-    return {
-      props: {
-        data: result.data,
-      },
-    };
+    const page = !context.query?.page? 1 : context.query.page;
+      const history = await axiosServer.get(
+        `/transaction/history?page=${page}&limit=4&filter=MONTH`,
+        {
+          headers: {
+            Authorization: `Bearer ${dataCookie.token}`,
+          },
+        }
+        );
+      return {
+        props: {
+          dataHistory:history.data.data,
+          data: result.data,
+        },
+      };
   } catch (error) {
-    console.log(error);
     if (error.response.status === 403) {
       return {
         redirect: {
@@ -100,9 +109,9 @@ const MyModal = (props) => {
   )
 }
 
-const DataDynamic = ({name,transaction,amount,receiver,sender,photo,userid}) => {
+const DataDynamic = ({name,amount,photo,type}) => {
   const dispatch = useDispatch()
-  const urlImage=`/res.cloudinary.com/dd1uwz8eu/image/upload/v1659549135/${photo}`
+  const urlImage=`https://res.cloudinary.com/dd1uwz8eu/image/upload/v1659549135/${photo}`
   return(
     <>
     <Head>
@@ -113,12 +122,12 @@ const DataDynamic = ({name,transaction,amount,receiver,sender,photo,userid}) => 
           <Image src={photo?urlImage:defaultimg} width={45} height={45} className="img-home-prof img-fluid" alt="samuel"/>
           <div className="d-flex-column justify-content-center mx-3">
             <p className="wrap-name-transfer">{name}</p>
-            <p  className="wrap-type">{transaction}</p>
+            <p  className="wrap-type">{type}</p>
           </div>
         </div>
-        {receiver===userid?
-          <p className="history-income">+Rp{amount}</p>:
-          <p className="history-espense">-Rp{amount}</p>}
+        {type==='send'?
+          <p className="history-espense">-Rp{amount}</p>:
+          <p className="history-income">+Rp{amount}</p>}
       </div>
     </>
   )
@@ -127,12 +136,7 @@ const DataDynamic = ({name,transaction,amount,receiver,sender,photo,userid}) => 
 const Home = (props) => {
   const [show, setShow] =React.useState(false);
   const data = Object.values(props.data)
-  const dataHistory = useSelector((state=>state.history.value))
-  const id = useSelector((state=>state.auth.id))
   const dispatch = useDispatch()
-  React.useEffect(()=>{
-    dispatch(showHistory({id}))
-  },[])
   return (
     <>
     <Head>
@@ -203,10 +207,10 @@ const Home = (props) => {
                       <Link href="/history" className="see-all">See all</Link>
                     </div>
                   </div>
-                  {dataHistory?.data?.map((val,index)=>{
+                  {props.dataHistory?.map((val,index)=>{
                     return(
                       <>
-                        <DataDynamic key={index} receiver={val.receiver_id} name={val.sender_id?val.firstName+' '+val.lastName:val.type} transaction={val.status} amount={val.amount} sender={val.sender_id} photo={val.profile_photo} userid={val.user_id}/>
+                        <DataDynamic key={index} name={val.fullName} type={val.type} amount={val.amount} photo={val.image}/>
                       </>
                     )
                   })}

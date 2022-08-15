@@ -25,8 +25,19 @@ export async function getServerSideProps(context) {
         },
       }
     );
+    const page = !context.query?.page? 1 : context.query.page;
+    const search = !context.query?.search? '' : context.query.search;
+    const user = await axiosServer.get(
+      `/user?page=${page}&search=${search}&limit=5&filter=MONTH`,
+      {
+        headers: {
+          Authorization: `Bearer ${dataCookie.token}`,
+        },
+      }
+      );
     return {
       props: {
+        dataUser:user.data.data,
         data: result.data,
       },
     };
@@ -61,8 +72,8 @@ const SearchProfile = ({errors,handleChange,handleSubmit}) =>{
     <>
       <Form onSubmit={handleSubmit}>
         <Form.Group className="d-flex mt-4">
-          <span className="wrap-search rounded-start"> <FiSearch className='ms-2'/> </span>
-          <Form.Control className="wrap-search-input" onChange={(e)=>dispatch(searchNum(e.target.value))} name='search' type="text" placeholder="Search Receiver"/>
+          <Button type='submit' className="wrap-search rounded-start"> <FiSearch/> </Button>
+          <Form.Control className="wrap-search-input" onChange={handleChange} name='search' type="text" placeholder="Search Receiver"/>
         </Form.Group>
       </Form>
     </>
@@ -97,17 +108,19 @@ const DataDynamic = ({id,name,num_phone,photo}) => {
 }
 
 const Transfer = (props) => {
-  const dataProfile = useSelector((state=>state.getAllProfile.value))
   const dispatch = useDispatch()
   const pages = useSelector((state=>state.counter.num))
   const submitSearch = (val) =>{
     const search = val.search
+    console.log(val);
     if(search){
-      dispatch(showAllProfile({pages,search}))
+      pages = 1
+      Router.push(`/transfer?page=${pages}&search=${search}&limit=5&sort=firstName ASC`)
     }
   }
   React.useEffect(()=>{
-    dispatch(showAllProfile({pages}))
+    const search = ''
+    Router.push(`/transfer?page=${pages}search=${search}&limit=5&sort=firstName ASC`)
   },[pages])
   return (
     <>
@@ -123,7 +136,7 @@ const Transfer = (props) => {
               <Formik onSubmit={submitSearch} initialValues={{search:''}}>
                 {(props)=><SearchProfile{...props}/>}
               </Formik>
-              {dataProfile?.map((val)=>{
+              {props.dataUser?.map((val)=>{
                 return(
                   <>
                     <React.Fragment >

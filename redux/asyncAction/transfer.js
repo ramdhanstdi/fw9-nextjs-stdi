@@ -8,12 +8,23 @@ export const transfer = createAsyncThunk('home/transfer', async({receiverId,mone
   try{
     const {data} = await axios.post('/transaction/transfer', {receiverId,amount,notes})
     results.successmsg = data.msg
-    console.log(data);
     return results
   }
   catch(e) {
     results.errormsg = e.response.data.massage
     return results
+  }
+})
+
+export const checkkPin = createAsyncThunk('transfer/confirmpin', async({pin})=>{
+  const results = {}
+  try{
+    const {data} = await axios.get(`/user/pin?pin=${pin}`)
+    results.successpin = data.msg
+    return results
+  }
+  catch(e) {
+    window.alert(e.response.data.msg)
   }
 })
 

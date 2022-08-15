@@ -39,7 +39,7 @@ const AuthLogin = ({errors,handleSubmit,handleChange}) =>{
         </Form.Group>
         
         <div className="text-end mt-2">
-          <Link href="/forgotPassword">Forgot password?</Link>
+          <Link href="/auth/forgotPassword">Forgot password?</Link>
         </div>
         <div>
           <Button disabled={lock} className="auth-button w-100 mt-5" type="submit">Login</Button>

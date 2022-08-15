@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Col, Form, Modal, Row } from 'react-bootstrap'
 import {useDispatch, useSelector} from 'react-redux'
-import {transfer} from '../redux/asyncAction/transfer'
+import {checkkPin, transfer} from '../redux/asyncAction/transfer'
 import { Formik } from 'formik';
 import * as Yup from 'yup'
 import Router from 'next/router'
@@ -10,6 +10,8 @@ import Dashboard from '../component/Dashboard'
 import cookies from 'next-cookies'
 import axiosServer from '../helpers/httpServer'
 import defaultimg from '../public/images/default.png'
+import Image from 'next/image';
+import { resetMsg } from '../redux/reducer/transfer';
 
 export async function getServerSideProps(context) {
   try {
@@ -99,7 +101,8 @@ const MyModal = (props) => {
   const notes = useSelector((state=>state.notes.value))
   const time = useSelector((state=>state.transfer.date))
   const token = useSelector((state=>state.auth.token))
-  const success = useSelector((state=>state.transfer.successmsg))
+  const successpin = useSelector((state=>state.transfer.successpin))
+  const successmsg = useSelector((state=>state.transfer.successmsg))
   const failed = useSelector((state=>state.transfer.errormsg))
   
   const pinRequest = (val) => {
@@ -109,18 +112,27 @@ const MyModal = (props) => {
       if (pin.length!==6) {
         window.alert('Pin Should Have 6 Digit')
       }else{
-        dispatch(transfer({token,receiverId,money,notes,time,pin}))
+        dispatch(checkkPin({pin}))
+        return pin
       }
     }else{
       window.alert('Input Only Number')
     }
   }
 
-  React.useEffect(()=>{
-    if (success) {
-      Router.push('/statusSuccess')
-    }
-  },[success,failed])
+  if(successmsg){
+    console.log('tf boss');
+    Router.push('/statusSuccess')
+    dispatch(resetMsg);
+  }
+
+React.useEffect(()=>{
+  if(successpin){
+    console.log(successpin);
+    dispatch(transfer({money,notes,receiverId}))
+    dispatch(resetMsg);
+  }
+},[successpin])
   return(
     <>
       <Head>
@@ -163,7 +175,7 @@ const TransferPinConfirm = (props) => {
               <div className="d-flex-column wrap-receiver p-3 my-3">
                 <div className="d-flex justify-content-between align-items-center">
                   <div className="d-flex">
-                    <img src={dataPhoto?dataPhoto:defaultimg} className="img-home-prof" alt="samuel"/>
+                    <Image width={45} height={45} src={!dataPhoto||dataPhoto.includes('null')?defaultimg:dataPhoto} className="img-home-prof" alt="samuel"/>
                     <div className="d-flex-column justify-content-center ms-3">
                       <p className="wrap-name-transfer">{dataName}</p>
                       <p  className="wrap-type">{dataPhone}</p>

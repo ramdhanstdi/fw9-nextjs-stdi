@@ -8,6 +8,7 @@ import Link from 'next/link'
 import cookies from 'next-cookies'
 import axiosServer from '../helpers/httpServer'
 import defaultimg from '../public/images/default.png'
+import Image from 'next/image'
 
 export async function getServerSideProps(context) {
   try {
@@ -66,7 +67,7 @@ const StatusFailed = (props) => {
           <Col md={9} className='d-flex flex-column mt-3'>
             <div className='wrap-right-el d-flex-column px-3 px-md-4 pt-3 pt-md-4'>
               <div className='w-100 text-center my-5'>
-                <img src={failed} alt='failed'/>
+                <Image width={50} height={50} src={failed} alt='failed'/>
                 <p className="wrap-status-transfer my-5">Transfer Failed</p>
                 <p className='wrap-text'>We can’t transfer your money at the moment, we recommend you to check your internet connection and try again.</p>
               </div>
@@ -114,7 +115,7 @@ const StatusFailed = (props) => {
               <div className="d-flex-column wrap-receiver p-3 my-3">
                 <div className="d-flex justify-content-between align-items-center">
                   <div className="d-flex">
-                    <img src={dataPhoto?dataPhoto:defaultimg} className="img-home-prof" alt="samuel"/>
+                    <Image width={45} height={45} src={!dataPhoto||dataPhoto.includes('null')?defaultimg:dataPhoto} className="img-home-prof" alt="samuel"/>
                     <div className="d-flex-column justify-content-center ms-3">
                       <p className="wrap-name-transfer">{dataName}</p>
                       <p  className="wrap-type">{dataPhone}</p>

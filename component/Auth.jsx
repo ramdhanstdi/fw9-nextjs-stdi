@@ -7,12 +7,6 @@ import Image from 'next/image';
 import router from 'next/router';
 
 const Auth = () => {
-  const token = useSelector((state=>state.auth.token))
-  React.useEffect(()=>{
-    if(!token){
-      router.push('/auth/Login');
-    }
-  }, [token]);
   return (
     <>
       <Col md={7} className='auth-bg d-flex-column justify-content-center mw-100 gap-5 p-4 p-md-5'>

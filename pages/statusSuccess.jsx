@@ -12,6 +12,7 @@ import cookies from 'next-cookies'
 import axiosServer from '../helpers/httpServer'
 import defaultimg from '../public/images/default.png'
 import Image from 'next/image'
+import { resetMsg } from '../redux/reducer/transfer'
 
 export async function getServerSideProps(context) {
   try {
@@ -58,7 +59,13 @@ const StatusSuccess = (props) => {
   const balance = useSelector((state=>state.profile.balance))
   const amount = useSelector((state=>state.amount.value))
   const notes = useSelector((state=>state.notes.value))
+  const successmsg = useSelector((state=>state.transfer.successmsg))
+
+  if(successmsg){
+    dispatch(resetMsg())
+  }
   const balanceleft = balance-amount
+
   return (
     <>
       <Head>
@@ -117,7 +124,7 @@ const StatusSuccess = (props) => {
               <div className="d-flex-column wrap-receiver p-3 my-3">
                 <div className="d-flex justify-content-between align-items-center">
                   <div className="d-flex">
-                    <img src={dataPhoto?dataPhoto:defaultimg} className="img-home-prof" alt="samuel"/>
+                    <Image width={45} height={45} src={!dataPhoto||dataPhoto.includes('null')?defaultimg:dataPhoto} className="img-home-prof" alt="samuel"/>
                     <div className="d-flex-column justify-content-center ms-3">
                       <p className="wrap-name-transfer">{dataName}</p>
                       <p  className="wrap-type">{dataPhone}</p>
@@ -133,7 +140,7 @@ const StatusSuccess = (props) => {
                   <Button className="button-download my-2 my-md-5 me-3" type="submit"><FiDownload className='navboard-icons me-3'/>Download</Button>
                 </Link>
                 <Link href='/home'>
-                  <Button className="auth-button my-2 my-md-5" onClick={[()=>dispatch(resetAmount),()=>dispatch(resetNotes)]} type="submit">Continue</Button>
+                  <Button className="auth-button my-2 my-md-5" onClick={[()=>dispatch(resetAmount),()=>dispatch(resetNotes),dispatch(resetMsg)]} type="submit">Continue</Button>
                 </Link>
               </div>
             </div>

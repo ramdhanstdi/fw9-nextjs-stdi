@@ -84,7 +84,6 @@ const TransferInput = (props) => {
   const dataPhone = useSelector((state=>state.transfer.phone))
   const dataPhoto = useSelector((state=>state.transfer.photo))
   const receiver = useSelector((state=>state.transfer.receiver))
-  // const urlImage=`https://res.cloudinary.com/dd1uwz8eu/image/upload/v1659549135/${dataPhoto}`
   const dataTime = new Date().toISOString()
   const dispatch = useDispatch()
   const transferRequest = (val) => {
@@ -110,7 +109,7 @@ const TransferInput = (props) => {
               <div className="d-flex-column wrap-receiver p-3 my-3">
                 <div className="d-flex justify-content-between align-items-center">
                   <div className="d-flex">
-                    <Image src={dataPhoto?dataPhoto:defaultimg} width={45} height={45} className="img-home-prof" alt="samuel"/>
+                    <Image src={!dataPhoto||dataPhoto.includes('null')?defaultimg:dataPhoto} width={45} height={45} className="img-home-prof" alt="samuel"/>
                     <div className="d-flex-column justify-content-center ms-3">
                       <p className="wrap-name-transfer">{dataName}</p>
                       <p  className="wrap-type">{dataPhone}</p>
