@@ -8,6 +8,8 @@ import Dashboard from '../component/Dashboard';
 import Router from 'next/router';
 import axiosServer from '../helpers/httpServer'
 import cookies from 'next-cookies'
+import { useDispatch, useSelector } from 'react-redux';
+import { changePin } from '../redux/asyncAction/changePin';
 
 export async function getServerSideProps(context) {
   try {
@@ -92,6 +94,8 @@ const AuthPin = ({errors,handleSubmit,handleChange}) => {
 }
 
 const ChangePin = (props) => {
+  const dispatch = useDispatch()
+  const id = useSelector((state=>state.auth.id))
   const pinRequest = (val) => {
     const pin = val.pin1+val.pin2+val.pin3+val.pin4+val.pin5+val.pin6
     const regExp = /^\d+$/;
@@ -99,7 +103,7 @@ const ChangePin = (props) => {
       if (pin.length!==6) {
         window.alert('Pin Should Have 6 Digit')
       }else{
-        Router.push('/profile')
+        dispatch(changePin({id,pin}))
       }
     }else{
       window.alert('Input Only Number')

@@ -28,6 +28,14 @@ export async function getServerSideProps(context) {
         },
       }
     );
+    const dashboard = await axiosServer.get(
+      `/dashboard/${dataCookie.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${dataCookie.token}`,
+        },
+      }
+    );
     const page = !context.query?.page? 1 : context.query.page;
       const history = await axiosServer.get(
         `/transaction/history?page=${page}&limit=4&filter=MONTH`,
@@ -40,6 +48,7 @@ export async function getServerSideProps(context) {
       return {
         props: {
           dataHistory:history.data.data,
+          dataDasboard: dashboard.data.data,
           data: result.data,
         },
       };
@@ -109,7 +118,7 @@ const MyModal = (props) => {
   )
 }
 
-const DataDynamic = ({name,amount,photo,type}) => {
+const DataDynamic = ({name,amount,photo,type,status}) => {
   const dispatch = useDispatch()
   const urlImage=`https://res.cloudinary.com/dd1uwz8eu/image/upload/v1659549135/${photo}`
   return(
@@ -122,7 +131,7 @@ const DataDynamic = ({name,amount,photo,type}) => {
           <Image src={photo?urlImage:defaultimg} width={45} height={45} className="img-home-prof img-fluid" alt="samuel"/>
           <div className="d-flex-column justify-content-center mx-3">
             <p className="wrap-name-transfer">{name}</p>
-            <p  className="wrap-type">{type}</p>
+            <p  className="wrap-type">{status}</p>
           </div>
         </div>
         {type==='send'?
@@ -134,6 +143,7 @@ const DataDynamic = ({name,amount,photo,type}) => {
 }
 
 const Home = (props) => {
+  console.log(props.dataDasboard)
   const [show, setShow] =React.useState(false);
   const data = Object.values(props.data)
   const dispatch = useDispatch()
@@ -184,12 +194,12 @@ const Home = (props) => {
                     <div className="wrap-income mt-3 mt-md-4 mx-3 mx-md-4">
                       <i className="wrap-income-i" data-feather="arrow-down"></i>
                       <p className="wrap-grap-p">Income</p>
-                      <p className="wrap-grap-balance">Rp2.120.000</p>
+                      <p className="wrap-grap-balance">+{props.dataDasboard.totalIncome}</p>
                     </div>
                     <div className="wrap-expense mt-3 mt-md-4 mx-3 mx-md-4">
                       <i className="wrap-expense-i" data-feather="arrow-up"></i>
                       <p className="wrap-grap-p">Expense</p>
-                      <p className="wrap-grap-balance">Rp1.560.000</p>
+                      <p className="wrap-grap-balance">-{props.dataDasboard.totalExpense}</p>
                     </div>
                   </div>
                   <div className="d-flex justify-content-center">
@@ -210,7 +220,7 @@ const Home = (props) => {
                   {props.dataHistory?.map((val,index)=>{
                     return(
                       <>
-                        <DataDynamic key={index} name={val.fullName} type={val.type} amount={val.amount} photo={val.image}/>
+                        <DataDynamic key={index} status={val.status} name={val.fullName} type={val.type} amount={val.amount} photo={val.image}/>
                       </>
                     )
                   })}

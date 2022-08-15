@@ -15,7 +15,6 @@ const loginSchema = Yup.object().shape({
 })
 
 const AuthReset = ({errors,handleSubmit,handleChange}) =>{
-  const dispatch = useDispatch()
   let lock = true
   lock = errors.email!==undefined||errors.password!==undefined
   return(

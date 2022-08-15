@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Row,Col, Modal, Form, Button } from 'react-bootstrap'
 import { FiArrowRight, FiEdit2 } from 'react-icons/fi'
 import {useDispatch, useSelector } from 'react-redux'
-import { editprofile, showProfile } from '../redux/asyncAction/profile'
+import { editphoto, editprofile, showProfile } from '../redux/asyncAction/profile'
 import defaultimg from '../public/images/default.png'
 import { Formik } from 'formik'
 import Head from 'next/head'
@@ -49,50 +49,81 @@ export async function getServerSideProps(context) {
   }
 }
 
-const FormUpdate=({erros,handleSubmit,handleChange,handleFileSelect})=>{
-  const data = useSelector((state=>state.profile.value))
+const UploadPhoto = (props) =>{
+  const [image,setImage] = React.useState(null)
+  const dispatch = useDispatch()
+  const id = useSelector((state=>state.auth.id))
+  const upload=()=>{
+    dispatch(editphoto({id,image}))
+    window.location.reload(false)
+  }
+  return(
+    <>
+      <Modal {...props} aria-labelledby="modal-pin" centered className='mx-auto'>
+        <Modal.Header closeButton>
+          <Modal.Title id="modal-pin" className='wrap-title'>
+            Upload File
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <input type='file' onChange={(event) => {setImage(event.target.files[0])}}></input>
+          <Button name='upload' onClick={upload} className='auth-button' type='submit'>Upload</Button>
+        </Modal.Body>
+      </Modal>
+    </>
+  )
+}
+
+const FormUpdate=({erros,handleSubmit,handleChange,setFieldValue})=>{
+  const [show, setShow] =React.useState(false);
+  const profile = useSelector((state=>state.profile?.value))
+  const data = profile?Object.values(profile):null
   return(
     <>
       <Form onSubmit={handleSubmit}>
-        {data?.result?.map((val)=>{
+        {data?.map((val)=>{
+          if(val.id){
+            const urlImage=`https://res.cloudinary.com/dd1uwz8eu/image/upload/v1659549135/${val.image}`
           return(
             <>
               <Modal.Body>
+                <div className='d-flex justify-content-between'>
+                  <Image src={val.image?urlImage:defaultimg} width={150} height={150} className='img-fluid' alt='profile'/>
+                  <Button className='auth-button' onClick={()=>setShow(true)}>Change Profile</Button>
+                </div>
                 <p className='wrap-text'>Input Your Name and Upload Your Profile</p>
                 <div className="d-flex flex-column justify-content-around wrapper-pin mw-100 gap-2 mt-5">
                   <div className="d-flex auth-border-pin">
-                    <Form.Control name='first_name' onChange={handleChange} placeholder={val.first_name}/>
+                    <Form.Control name='first_name' onChange={handleChange} placeholder={val.firstName}/>
                   </div>
                   <div className="d-flex auth-border-pin">
-                    <Form.Control name='last_name' onChange={handleChange} placeholder={val.last_name}/>
-                  </div>
-                  <div className="d-flex auth-border-pin">
-                    <Form.Control type='file' name='profile_photo' onChange={handleFileSelect}/>
+                    <Form.Control name='last_name' onChange={handleChange} placeholder={val.lastName}/>
                   </div>
                 </div>
                 <br/>
               </Modal.Body>
             </>
-          )
+          )}
         })}
         <Modal.Footer>
           <Button name='button-confirm' className='auth-button' type='submit'>Confirm</Button>
         </Modal.Footer>
       </Form>
+      <UploadPhoto show={show} onHide={()=>setShow(false)}/>
     </>
   )
 }
 
 const MyModal = (props) => {
-  const data = useSelector((state=>state.profile.value))
-  const token = useSelector((state=>state.auth.token))
+  const profile = useSelector((state=>state.profile?.value))
+  const data = profile?Object.values(profile):null
+  const id = useSelector((state=>state.auth.id))
   const dispatch = useDispatch()
   const setProfile = (val) =>{
-    const first_name = val.first_name
-    const last_name = val.last_name
-    const photo = val.profile_photo
-    console.log(photo);
-    dispatch(editprofile({token,first_name,last_name,photo}))
+    const firstName = val.first_name
+    const lastName = val.last_name
+    dispatch(editprofile({id,firstName,lastName}))
+    window.location.reload(false);
   }
   return(
     <>
@@ -102,16 +133,17 @@ const MyModal = (props) => {
                 Enter Your Data
           </Modal.Title>
         </Modal.Header>
-        {data?.result?.map((val)=>{
-          const firstname = val.first_name
-          const lastname = val.last_name
+        {data?.map((val)=>{
+          const firstname = val.firstName
+          const lastname = val.lastName
+          if(val.id){
           return(
             <>
-              <Formik onSubmit={setProfile} initialValues={{first_name:{firstname},last_name:{lastname},profile_photo:''}}>
+              <Formik onSubmit={setProfile} initialValues={{firstName:{firstname},lastName:{lastname}}}>
                 {(props)=><FormUpdate{...props}/>}
               </Formik>
             </>
-          )
+          )}
         })}
       </Modal>    
     </>
@@ -126,7 +158,7 @@ const Profile = (props) => {
   const [show, setShow] =React.useState(false);
   const logOut =()=>{
     dispatch(logout(()=>{
-      router.push('/auth/login')
+      router.push('/auth/Login')
     }))
   }
   React.useEffect(() => {
@@ -149,7 +181,7 @@ const Profile = (props) => {
             <div className='wrap-right-el d-flex-column px-3 px-md-4 pt-3 pt-md-4'>
               <div className="w-100 text-center my-3 my-md-5">
                 {data?.map((val)=>{
-                  const urlImage=`/res.cloudinary.com/dd1uwz8eu/image/upload/v1659549135/${val.image}`
+                  const urlImage=`https://res.cloudinary.com/dd1uwz8eu/image/upload/v1659549135/${val.image}`
                   if(val.id){
                       return(
                         <>

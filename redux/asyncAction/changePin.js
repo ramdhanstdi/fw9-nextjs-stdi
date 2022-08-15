@@ -2,10 +2,10 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import qs from 'qs'
 import axios from '../../helpers/http';
 
-export const changePassword = createAsyncThunk('user/changePassword',async({id,oldPassword,newPassword,confirmPassword})=>{
+export const changePin = createAsyncThunk('user/changePin',async({id,pin})=>{
   const results = {}
   try{
-    const {data} = await axios.patch(`/user/password/${id}`,{oldPassword,newPassword,confirmPassword})
+    const {data} = await axios.patch(`/user/pin/${id}`,{pin})
     results.data = data.result
     window.alert(data.msg);
     return {...data}

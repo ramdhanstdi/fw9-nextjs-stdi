@@ -57,7 +57,7 @@ export async function getServerSideProps(context) {
     }
   }
 
-const DataDynamic =({name,type,amount,photo})=>{
+const DataDynamic =({name,type,amount,photo,status})=>{
     const urlImage=`https://res.cloudinary.com/dd1uwz8eu/image/upload/v1659549135/${photo}`
     return (
         <>
@@ -67,7 +67,7 @@ const DataDynamic =({name,type,amount,photo})=>{
                 <Image width={45} height={45} src={photo?urlImage:defaultimg} className="img-home-prof rounded" alt="samuel"/>
                 <div className="d-flex-column justify-content-center ms-3">
                   <p className="wrap-name-transfer">{name}</p>
-                  <p  className="wrap-type">{type}</p>
+                  <p  className="wrap-type">{status}</p>
                 </div>
               </div>
               {type==='send'?
@@ -108,7 +108,7 @@ const History = (props) => {
                 <p className="wrap-text mt-2 mt-md-3 mb-3 mb-md-5"></p>
                 {props.dataHistory?.map((val,index)=>{
                 return(
-                    <DataDynamic key={index} name={val.fullName} type={val.type} amount={val.amount} photo={val.image}/>
+                    <DataDynamic key={index} name={val.fullName} type={val.type} status={val.status} amount={val.amount} photo={val.image}/>
                 )
                 })}
                 <div className='d-flex justify-content-around m-3'>

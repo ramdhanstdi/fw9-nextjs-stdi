@@ -25,7 +25,7 @@ const Header = (props) => {
         <Col md={5}>
           <div className="d-flex justify-content-between justify-content-md-end align-items-center wrap-profile ps-3 px-md-3 mx-2 mx-md-3">
             {data?.map((val)=>{
-              const urlImage=`/res.cloudinary.com/dd1uwz8eu/image/upload/v1659549135/${val.image}`
+              const urlImage=`https://res.cloudinary.com/dd1uwz8eu/image/upload/v1659549135/${val.image}`
               if(val.id){
                 return(
                   <>

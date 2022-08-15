@@ -55,10 +55,21 @@ export const createpin = createAsyncThunk('profile/createpin',async({id,number})
   }
 })
 
-export const forgotPassword = createAsyncThunk('auth/resetpassword',async({email})=>{
+export const forgotPassword = createAsyncThunk('auth/forgotpassword',async({email})=>{
   try{
-    const linkDirect = 'http://localhost:3000/resetPassword'
+    const linkDirect = 'http://localhost:3000/auth/resetPassword'
     const {data} = await axiosServer.post('/auth/forgot-password',{email,linkDirect})
+    window.alert(data.msg);
+  }
+  catch(e){
+    window.alert(e.response.data.msg)
+    return results
+  }
+})
+
+export const resetPassword = createAsyncThunk('auth/resetpassword',async({keysChangePassword,newPassword,confirmPassword})=>{
+  try{
+    const {data} = await axiosServer.patch('/auth/reset-password',{keysChangePassword,newPassword,confirmPassword})
     console.log(data);
   }
   catch(e){

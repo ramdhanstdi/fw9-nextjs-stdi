@@ -48,9 +48,9 @@ export async function getServerSideProps(context) {
 }
 
 const passwordSchema = Yup.object().shape({
-  currentpassword:Yup.string().required('Required'),
-  password: Yup.string().min(8).required('Required'),
-  newpassword: Yup.string().min(8).required('Required')
+  oldPassword:Yup.string().required('Required'),
+  newPassword: Yup.string().min(3).required('Required'),
+  confirmPassword: Yup.string().min(3).required('Required')
 })
 
 const AuthPassword = ({errors,handleChange,handleSubmit}) =>{
@@ -63,24 +63,24 @@ const AuthPassword = ({errors,handleChange,handleSubmit}) =>{
           <Form.Group className="d-flex mt-5">
             <span className="auth-form"> <FiLock/> </span>
             <div className="d-flex-column w-100">
-              <Form.Control name="currentpassword" onChange={handleChange} className="auth-form" type="password" placeholder="Enter Your Password" isInvalid={!!errors.currentpassword}/>
-              <Form.Control.Feedback type="invalid">{errors.currentpassword}</Form.Control.Feedback>
+              <Form.Control name="oldPassword" onChange={handleChange} className="auth-form" type="password" placeholder="Enter Your oldPassword" isInvalid={!!errors.oldPassword}/>
+              <Form.Control.Feedback type="invalid">{errors.oldPassword}</Form.Control.Feedback>
             </div>
           </Form.Group>
 
           <Form.Group className="d-flex mt-5">
             <span className="auth-form"> <FiLock/> </span>
             <div className="d-flex-column w-100">
-              <Form.Control name="password" onChange={handleChange} className="auth-form" type="password" placeholder="Enter Your Password" isInvalid={!!errors.password}/>
-              <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
+              <Form.Control name="newPassword" onChange={handleChange} className="auth-form" type="password" placeholder="Enter Your newPassword" isInvalid={!!errors.newPassword}/>
+              <Form.Control.Feedback type="invalid">{errors.newPassword}</Form.Control.Feedback>
             </div>
           </Form.Group>
 
           <Form.Group className="d-flex mt-5">
             <span className="auth-form"> <FiLock/> </span>
             <div className="d-flex-column w-100">
-              <Form.Control name="newpassword" onChange={handleChange} className="auth-form" type="password" placeholder="Enter Your Password" isInvalid={!!errors.newpassword}/>
-              <Form.Control.Feedback type="invalid">{errors.newpassword}</Form.Control.Feedback>
+              <Form.Control name="confirmPassword" onChange={handleChange} className="auth-form" type="password" placeholder="Enter Your newPassword" isInvalid={!!errors.confirmPassword}/>
+              <Form.Control.Feedback type="invalid">{errors.confirmPassword}</Form.Control.Feedback>
             </div>
           </Form.Group>
         </div>
@@ -93,19 +93,21 @@ const AuthPassword = ({errors,handleChange,handleSubmit}) =>{
 }
 
 const ChangePassword = (props) => {
-  const dispatch = useDispatch
-  const token = useSelector((state=>state.auth.token))
+  const dispatch = useDispatch()
+  const id = useSelector((state=>state.auth.id))
   const changePasswordRequest = (val) => {
-    const currentpassword = val.currentpassword
-    const password = val.password
-    const newpassword = val.newpassword
-    if(val.newpassword!==val.password){
-      window.alert('New Password Not Match')
+    const oldPassword = val.oldPassword
+    const newPassword = val.newPassword
+    const confirmPassword = val.confirmPassword
+    if(val.newPassword!==val.confirmPassword){
+      window.alert('Confirm Password Not Match')
     }else{
-      dispatch(changePassword({token,currentpassword,password,newpassword}))
-      Router.push('/profile')
+      dispatch(changePassword({id,oldPassword,newPassword,confirmPassword}))
     }
   }
+  React.useEffect(()=>{
+
+  },[])
   return (
     <>
       <Head>

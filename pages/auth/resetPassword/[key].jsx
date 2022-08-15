@@ -1,15 +1,17 @@
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { FiLock} from 'react-icons/fi';
 import React from 'react'
-import Auth from '../component/Auth'
-import { useNavigate } from 'react-router-dom';
+import Auth from '../../../component/Auth';
 import { Formik } from 'formik';
 import * as Yup from 'yup'
-import { Helmet } from 'react-helmet';
+import { useDispatch,useSelector } from 'react-redux';
+import Head from 'next/head';
+import {useRouter} from 'next/router';
+import { resetPassword } from '../../../redux/asyncAction/auth';
 
 const passwordSchema = Yup.object().shape({
-  newPassword: Yup.string().min(8).required('Required'),
-  confirmPassword: Yup.string().min(8).required('Required')
+  newPassword: Yup.string().min(3).required('Required'),
+  confirmPassword: Yup.string().min(3).required('Required')
 })
 
 const AuthPassword = ({errors,handleChange,handleSubmit}) =>{
@@ -41,21 +43,24 @@ const AuthPassword = ({errors,handleChange,handleSubmit}) =>{
   )
 }
 
-const ResetPassword = () => {
-  const navigate = useNavigate()
+const FormInput = () => {
+  const route = useRouter()
+  const {key} = route.query
+  const dispatch = useDispatch()
   const passswordReset = (val) => {
     if(val.newPassword!==val.confirmPassword){
       window.alert('Password Not Match')
     }else{
-      navigate('/login',{replace: true})
+      dispatch(resetPassword({keysChangePassword:key,newPassword:val.newPassword,confirmPassword:val.confirmPassword}))
+      route.push('/auth/Login')
     }
   }
   return (
     <>
-      <Helmet>
+      <Head>
         <meta charSet="utf-8" />
         <title>Forgot Passsword</title>
-      </Helmet>
+      </Head>
       <Row className="mw-100 mh-100 mx-0">
         <Auth/>
         <Col md={5} className='p-4 p-md-5'>
@@ -76,4 +81,4 @@ const ResetPassword = () => {
   )
 }
 
-export default ResetPasword
+export default FormInput
