@@ -68,7 +68,7 @@ const CreatePin = () => {
         window.alert('Pin Should Have 6 Digit')
       }else{
         dispatch(createpin({id,number}))
-        router.push('/auth/CreatePinSuccess')
+        router.push('/auth/CreatePinSucces')
       }
     }else{
       window.alert('Input Only Number')

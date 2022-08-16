@@ -12,6 +12,7 @@ import Image from 'next/image'
 import { logout } from '../redux/reducer/auth'
 import cookies from 'next-cookies'
 import axiosServer from '../helpers/httpServer'
+import { resetmsg } from '../redux/reducer/profile'
 
 export async function getServerSideProps(context) {
   try {
@@ -55,7 +56,6 @@ const UploadPhoto = (props) =>{
   const id = useSelector((state=>state.auth.id))
   const upload=()=>{
     dispatch(editphoto({id,image}))
-    window.location.reload(false)
   }
   return(
     <>
@@ -123,7 +123,6 @@ const MyModal = (props) => {
     const firstName = val.first_name
     const lastName = val.last_name
     dispatch(editprofile({id,firstName,lastName}))
-    window.location.reload(false);
   }
   return(
     <>
@@ -152,6 +151,7 @@ const MyModal = (props) => {
 
 const Profile = (props) => {
   const profile = useSelector((state=>state.profile?.value))
+  const successmsg = useSelector((state=>state.profile?.successmsg))
   const data = profile?Object.values(profile):null
   const id = useSelector((state=>state.auth.id))
   const dispatch = useDispatch()
@@ -161,14 +161,18 @@ const Profile = (props) => {
       router.push('/auth/Login')
     }))
   }
+  if(successmsg){
+    window.location.reload(false)
+  }
   React.useEffect(() => {
+    dispatch(resetmsg)
     if(id){
       dispatch(showProfile(id))
     }
     if(!id){
       router.push('/auth/Login')
     }
-  }, [id]);
+  }, [successmsg,id]);
   return (
     <>
       <Head>

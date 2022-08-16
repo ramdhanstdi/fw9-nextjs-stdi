@@ -81,7 +81,7 @@ const SignUp = () => {
   }
   React.useEffect(()=>{
     if(successmsg){
-      Router.push('auth/Login')
+      Router.push('/auth/Login')
     }
   },[successmsg])
   return (

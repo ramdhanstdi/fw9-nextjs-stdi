@@ -11,7 +11,7 @@ export const editprofile = createAsyncThunk('profile/editprofile',async({id,firs
   const results = {}
   try{
     const {data} = await axios.patch(`/user/profile/${id}`,{firstName,lastName})
-    results.successmsg=data.massage
+    results.successmsg=data.msg
     return results
   }
   catch(e){
@@ -28,7 +28,7 @@ export const editphoto = createAsyncThunk('profile/editphoto',async({id,image})=
     formData.append('image',image)
     const {data} = await axios.patch(`/user/image/${id}`,formData)
     console.log(data);
-    results.successmsg=data.massage
+    results.successmsg=data.msg
     return results
   }
   catch(e){

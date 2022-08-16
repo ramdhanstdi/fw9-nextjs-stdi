@@ -8,6 +8,8 @@ import { addPhone } from '../redux/asyncAction/phone'
 import Head from 'next/head';
 import Dashboard from '../component/Dashboard';
 import Router from 'next/router';
+import cookies from 'next-cookies'
+import axiosServer from '../helpers/httpServer'
 
 export async function getServerSideProps(context) {
   try {

@@ -1,17 +1,14 @@
 import { Button, Col, Row } from 'react-bootstrap';
 import React from 'react'
 import Auth from '../../component/Auth'
-import Link from 'next/link';
 import success from '../../public/images/success.png'
 import Head from 'next/head';
 import Image from 'next/image';
-import { logout } from '../../redux/reducer/auth';
+import Router from 'next/router';
 
 const CreatePinSuccess = () => {
   const logOut =()=>{
-    dispatch(logout(()=>{
-      router.push('/login')
-    }))
+    Router.push('/home')
   }
   return (
     <>

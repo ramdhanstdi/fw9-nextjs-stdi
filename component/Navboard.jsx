@@ -63,7 +63,7 @@ const NavBoard = () => {
   const dispatch = useDispatch()
   const logOut =()=>{
     dispatch(logout(()=>{
-      router.push('/auth/login')
+      router.push('/auth/Login')
     }))
   }
   React.useEffect(() => {

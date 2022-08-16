@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { editprofile, showProfile } from '../asyncAction/profile';
+import { editphoto, editprofile, showProfile } from '../asyncAction/profile';
 
 const initialState = {
   value:[],
@@ -18,6 +18,9 @@ export const profile = createSlice({
     },
     loginemail:(state,action)=>{
       state.email=action.payload
+    },
+    resetmsg:(state)=>{
+      state.successmsg=null
     }
   },
   extraReducers:(build)=>{
@@ -35,9 +38,16 @@ export const profile = createSlice({
       state.data=action.payload
       state.successmsg=action.payload?.successmsg
     })
+    build.addCase(editphoto.pending,(state)=>{
+      state.data=null
+      state.successmsg=null
+    })
+    build.addCase(editphoto.fulfilled,(state,action)=>{
+      state.successmsg=action.payload?.successmsg
+    })
   }
 })
 
-export {showProfile,editprofile}
-export const {balance,loginemail} = profile.actions
+export {showProfile,editprofile,editphoto}
+export const {balance,loginemail,resetmsg} = profile.actions
 export default profile.reducer
