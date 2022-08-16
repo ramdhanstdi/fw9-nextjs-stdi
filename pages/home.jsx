@@ -54,7 +54,7 @@ export async function getServerSideProps(context) {
     if (error.response.status === 403) {
       return {
         redirect: {
-          destination: "/auth/Login",
+          destination: "/auth/login",
           permanent: false,
         },
       };

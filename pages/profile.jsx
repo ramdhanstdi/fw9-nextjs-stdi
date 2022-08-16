@@ -158,7 +158,7 @@ const Profile = (props) => {
   const [show, setShow] =React.useState(false);
   const logOut =()=>{
     dispatch(logout(()=>{
-      router.push('/auth/Login')
+      router.push('/auth/login')
     }))
   }
   if(successmsg){
@@ -170,7 +170,7 @@ const Profile = (props) => {
       dispatch(showProfile(id))
     }
     if(!id){
-      router.push('/auth/Login')
+      router.push('/auth/login')
     }
   }, [successmsg,id]);
   return (

@@ -24,7 +24,7 @@ export default function Home() {
         <div className="header">
           <p className="title">STD iWallet</p>
           <div className="togle">
-            <Button className="login" onClick={()=>{router.push('/auth/Login')}}><span>Login</span></Button>
+            <Button className="login" onClick={()=>{router.push('/auth/login')}}><span>Login</span></Button>
             <Button className="signUp" onClick={()=>{router.push('/auth/SignUp')}}><span>Sign in</span></Button>
           </div>
         </div>

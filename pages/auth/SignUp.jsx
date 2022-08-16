@@ -21,7 +21,7 @@ const AuthSignUp = ({errors,handleChange,handleSubmit}) => {
   const success = useSelector((state=>state.auth.successmsg))
   React.useEffect(()=>{
     if(success){
-      Router.push('/auth/Login')
+      Router.push('/auth/login')
     }
   },[success])
   let lock = true
@@ -81,7 +81,7 @@ const SignUp = () => {
   }
   React.useEffect(()=>{
     if(successmsg){
-      Router.push('/auth/Login')
+      Router.push('/auth/login')
     }
   },[successmsg])
   return (
@@ -105,7 +105,7 @@ const SignUp = () => {
             </Formik>
 
             <div className="text-center">
-              <p className="mt-5">Don’t have an account? Let’s <Link href="/auth/Login">Log in</Link></p>
+              <p className="mt-5">Don’t have an account? Let’s <Link href="/auth/login">Log in</Link></p>
             </div>
           </div>
         </Col>

@@ -56,7 +56,7 @@ const CreatePin = () => {
   const dispatch = useDispatch()
   React.useEffect(()=>{
     if(!token){
-      router.push('/auth/Login');
+      router.push('/auth/login');
     }
   }, [token]);
 

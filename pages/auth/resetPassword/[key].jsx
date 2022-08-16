@@ -52,7 +52,7 @@ const FormInput = () => {
       window.alert('Password Not Match')
     }else{
       dispatch(resetPassword({keysChangePassword:key,newPassword:val.newPassword,confirmPassword:val.confirmPassword}))
-      route.push('/auth/Login')
+      route.push('/auth/login')
     }
   }
   return (
