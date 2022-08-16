@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert, Button, Col, Row } from 'react-bootstrap'
+import { Button, Col, Row } from 'react-bootstrap'
 import failed from '../public/images/failed.png'
 import {useSelector} from 'react-redux'
 import Head from 'next/head'

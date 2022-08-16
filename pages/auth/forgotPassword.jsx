@@ -1,14 +1,12 @@
-import { Alert, Button, Col, Form, Row } from 'react-bootstrap';
-import { FiMail,FiLock } from 'react-icons/fi';
+import { Button, Col, Form, Row } from 'react-bootstrap';
+import { FiMail} from 'react-icons/fi';
 import React from 'react'
 import Auth from '../../component/Auth'
-import Link from 'next/link';
 import { Formik } from 'formik';
 import * as Yup from 'yup'
 import Head from 'next/head';
 import { useDispatch,useSelector } from 'react-redux';
-import { login, forgotPassword } from '../../redux/asyncAction/auth';
-import Router from 'next/router';
+import { forgotPassword } from '../../redux/asyncAction/auth';
 
 const loginSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email address format').required('Required'),

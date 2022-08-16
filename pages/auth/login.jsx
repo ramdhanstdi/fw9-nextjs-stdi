@@ -1,4 +1,4 @@
-import { Alert, Button, Col, Form, Row } from 'react-bootstrap';
+import { Button, Col, Form, Row } from 'react-bootstrap';
 import { FiMail,FiLock } from 'react-icons/fi';
 import React from 'react'
 import Auth from '../../component/Auth'

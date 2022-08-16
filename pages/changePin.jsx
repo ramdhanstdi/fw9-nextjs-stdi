@@ -1,5 +1,4 @@
 import React from 'react'
-import { Footer } from '../component/Footer'
 import { Row,Col, Form, Button } from 'react-bootstrap'
 import { Formik } from 'formik';
 import * as Yup from 'yup'

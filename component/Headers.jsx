@@ -7,7 +7,6 @@ import { showProfile } from '../redux/asyncAction/profile'
 import Image from 'next/image';
 
 const Header = (props) => {
-  const profile = useSelector((state=>state.profile?.value))
   const data = Object.values(props.data.data)
   const id = useSelector((state=>state.auth.id))
   const dispatch = useDispatch()

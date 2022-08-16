@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert, Button, Col, Row } from 'react-bootstrap'
+import { Button, Col, Row } from 'react-bootstrap'
 import {useSelector, useDispatch} from 'react-redux'
 import Head from 'next/head'
 import Dashboard from '../component/Dashboard'

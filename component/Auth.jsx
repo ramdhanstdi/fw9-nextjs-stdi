@@ -2,9 +2,7 @@ import { Col} from 'react-bootstrap';
 import React from 'react'
 import Link from 'next/link';
 import phone from '../public/images/image.png'
-import { useSelector } from 'react-redux';
 import Image from 'next/image';
-import router from 'next/router';
 
 const Auth = () => {
   return (

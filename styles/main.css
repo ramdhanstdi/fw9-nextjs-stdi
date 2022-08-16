@@ -1,7 +1,7 @@
 body{
     width: 100%;
-    color: #3A3D42;
-    font-family: 'Nunito Sans';
+    color: #3A3D42 !important;
+    font-family: 'Nunito Sans' !important;
     background: #E7F6F2 !important;
 }
 
