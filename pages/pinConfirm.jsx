@@ -121,14 +121,12 @@ const MyModal = (props) => {
   }
 
   if(successmsg){
-    console.log('tf boss');
     Router.push('/statusSuccess')
     dispatch(resetMsg);
   }
 
 React.useEffect(()=>{
   if(successpin){
-    console.log(successpin);
     dispatch(transfer({money,notes,receiverId}))
     dispatch(resetMsg);
   }
@@ -160,7 +158,7 @@ const TransferPinConfirm = (props) => {
   const dataPhone = useSelector((state=>state.transfer.phone))
   const dataPhoto = useSelector((state=>state.transfer.photo))
   const dataDate = useSelector((state=>state.transfer.date))
-  const balance = useSelector((state=>state.profile.balance))
+  const balance = props.data.balance
   const [show, setShow] =React.useState(false);
   const amount = useSelector((state=>state.amount.value))
   const notes = useSelector((state=>state.notes.value))

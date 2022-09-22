@@ -55,9 +55,8 @@ const amountSchema = Yup.object().shape({
   amount: Yup.number().min(1).required('Required'),
 })
 
-const AuthAmoount = ({errors, handleSubmit, handleChange})=>{
+const AuthAmoount = ({errors, handleSubmit, handleChange, balance})=>{
   const transferName = useSelector((state=>state.transfer))
-  const balance = useSelector((state=>state.profile.balance))
   const dispatch = useDispatch()
   return(
     <Form noValidate onSubmit={handleSubmit}>
@@ -84,6 +83,7 @@ const TransferInput = (props) => {
   const dataPhone = useSelector((state=>state.transfer.phone))
   const dataPhoto = useSelector((state=>state.transfer.photo))
   const receiver = useSelector((state=>state.transfer.receiver))
+  const data = props.data
   const dataTime = new Date().toISOString()
   const dispatch = useDispatch()
   const transferRequest = (val) => {
@@ -119,7 +119,7 @@ const TransferInput = (props) => {
               </div>
               <p className="wrap-text">Type the amount you want to transfer and then<br/>press continue to the next steps.</p>
               <Formik validationSchema={amountSchema} initialValues={{amount:''}} onSubmit={transferRequest}>
-                {(props)=><AuthAmoount{...props}/>}
+                {(props)=><AuthAmoount{...props} balance={data.balance}/>}
               </Formik>
             </div>
           </Col>
