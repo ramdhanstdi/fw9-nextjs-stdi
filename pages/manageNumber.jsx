@@ -24,7 +24,7 @@ export async function getServerSideProps(context) {
     );
     return {
       props: {
-        data: result.data,
+        data: result.data.data,
       },
     };
   } catch (error) {

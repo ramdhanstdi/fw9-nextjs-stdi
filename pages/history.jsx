@@ -34,7 +34,7 @@ export async function getServerSideProps(context) {
       return {
         props: {
           dataHistory:history.data.data,
-          data: result.data,
+          data: result.data.data,
         },
       };
     } catch (error) {

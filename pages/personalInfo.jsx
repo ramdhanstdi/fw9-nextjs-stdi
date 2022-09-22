@@ -21,7 +21,7 @@ export async function getServerSideProps(context) {
     );
     return {
       props: {
-        data: result.data,
+        data: result.data.data,
       },
     };
   } catch (error) {
@@ -45,9 +45,13 @@ export async function getServerSideProps(context) {
 }
 
 const PersonalInfo = (props) => {
-  const data = Object.values(props.data)
+  const data = props.data
   const id = useSelector((state=>state.auth.id))
   const dispatch = useDispatch()
+  const firstname = data.firstName?.split(' ').map(str =>str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()).join(' ')
+  const lastname = data.lastName?.split(' ').map(str =>str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()).join(' ')
+  const phone = data.noTelp?.split('')
+  const email = data.email
   React.useEffect(()=>{
     dispatch(showProfile(id))
   },[])
@@ -59,65 +63,53 @@ const PersonalInfo = (props) => {
       </Head>
       <Dashboard data={props.data}>
           <Col md={9} className='d-flex flex-column mt-3 w-100'>
-            {data?.map((val)=>{
-              const firstname = val.firstName?.split(' ').map(str =>str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()).join(' ')
-              const lastname = val.lastName?.split(' ').map(str =>str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()).join(' ')
-              const phone = val.noTelp?.split('')
-              const email = val.email
-              if(val.id){
-                  return(
-                    <>
-                      <div className='wrap-right-el d-flex-column px-3 px-md-4 pt-3 pt-md-4'>
-                        <h1 className="wrap-title mb-3">Personal Info</h1>
-                        <p className='wrap-text'>We got your personal information from the sign<br/>up proccess. If you want to make changes<br/>on your information, contact our support.</p>
-                        <div className="d-flex-column wrap-receiver p-3 my-3">
-                          <div className="d-flex justify-content-between align-items-center">
-                            <div className="d-flex">
-                              <div className="d-flex-column justify-content-center ms-1">
-                                <p  className="wrap-text mb-2">First Name</p>
-                                <p className="wrap-name-confirm">{firstname}</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="d-flex-column wrap-receiver p-3 my-3">
-                          <div className="d-flex justify-content-between align-items-center">
-                            <div className="d-flex">
-                              <div className="d-flex-column justify-content-center ms-1">
-                                <p  className="wrap-text mb-2">Last Name</p>
-                                <p className="wrap-name-confirm">{lastname}</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="d-flex-column wrap-receiver p-3 my-3">
-                          <div className="d-flex justify-content-between align-items-center">
-                            <div className="d-flex">
-                              <div className="d-flex-column justify-content-center ms-1">
-                                <p  className="wrap-text mb-2">Verified E-mail</p>
-                                <p className="wrap-name-confirm">{email}</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="d-flex-column wrap-receiver p-3 my-3">
-                          <div className="d-flex justify-content-between align-items-center">
-                            <div className="d-flex">
-                              <div className="d-flex-column justify-content-center ms-1">
-                                <p  className="wrap-text mb-2">Phone Number</p>
-                                <p className="wrap-name-confirm">{phone}</p>
-                              </div>
-                            </div>
-                            <Link className="wrap-text" href="/manageNumber">
-                              <p className="p-3">Manage</p>
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                    </>
-                  )
-              }
-            })}
+            <div className='wrap-right-el d-flex-column px-3 px-md-4 pt-3 pt-md-4'>
+              <h1 className="wrap-title mb-3">Personal Info</h1>
+              <p className='wrap-text'>We got your personal information from the sign<br/>up proccess. If you want to make changes<br/>on your information, contact our support.</p>
+              <div className="d-flex-column wrap-receiver p-3 my-3">
+                <div className="d-flex justify-content-between align-items-center">
+                  <div className="d-flex">
+                    <div className="d-flex-column justify-content-center ms-1">
+                      <p  className="wrap-text mb-2">First Name</p>
+                      <p className="wrap-name-confirm">{firstname}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="d-flex-column wrap-receiver p-3 my-3">
+                <div className="d-flex justify-content-between align-items-center">
+                  <div className="d-flex">
+                    <div className="d-flex-column justify-content-center ms-1">
+                      <p  className="wrap-text mb-2">Last Name</p>
+                      <p className="wrap-name-confirm">{lastname}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="d-flex-column wrap-receiver p-3 my-3">
+                <div className="d-flex justify-content-between align-items-center">
+                  <div className="d-flex">
+                    <div className="d-flex-column justify-content-center ms-1">
+                      <p  className="wrap-text mb-2">Verified E-mail</p>
+                      <p className="wrap-name-confirm">{email}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="d-flex-column wrap-receiver p-3 my-3">
+                <div className="d-flex justify-content-between align-items-center">
+                  <div className="d-flex">
+                    <div className="d-flex-column justify-content-center ms-1">
+                      <p  className="wrap-text mb-2">Phone Number</p>
+                      <p className="wrap-name-confirm">{phone}</p>
+                    </div>
+                  </div>
+                  <Link className="wrap-text" href="/manageNumber">
+                    <p className="p-3">Manage</p>
+                  </Link>
+                </div>
+              </div>
+            </div>
           </Col>
       </Dashboard>
     </>

@@ -6,7 +6,6 @@ import defaultimg from '../public/images/default.png'
 import Link from 'next/link';
 import Dashboard from '../component/Dashboard'
 import {useDispatch} from 'react-redux'
-import { balance } from '../redux/reducer/profile'
 import Head from 'next/head'
 import Image from 'next/image'
 import cookies from 'next-cookies'
@@ -19,13 +18,13 @@ export async function getServerSideProps(context) {
   try {
     const dataCookie = cookies(context);
     const result = await axiosServer.get(
-      `user/profile/${dataCookie.id}`,
+      `/user/profile/${dataCookie.id}`,
       {
         headers: {
           Authorization: `Bearer ${dataCookie.token}`,
         },
       }
-    );
+      );
     const dashboard = await axiosServer.get(
       `/dashboard/${dataCookie.id}`,
       {
@@ -47,7 +46,7 @@ export async function getServerSideProps(context) {
         props: {
           dataHistory:history.data.data,
           dataDasboard: dashboard.data.data,
-          data: result.data,
+          data: result.data.data,
         },
       };
   } catch (error) {
@@ -141,10 +140,8 @@ const DataDynamic = ({name,amount,photo,type,status}) => {
 }
 
 const Home = (props) => {
-  console.log(props.dataDasboard)
   const [show, setShow] =React.useState(false);
-  const data = Object.values(props.data)
-  const dispatch = useDispatch()
+  const data = props.data
   return (
     <>
     <Head>
@@ -157,17 +154,8 @@ const Home = (props) => {
                   <div className='wrap-details d-flex justify-content-between'>
                     <div className="wrap-info">
                       <p>Balance</p>
-                      {data?.map((val)=>{
-                        if(val.id){
-                          dispatch(balance(val.balance))
-                          return(
-                            <>
-                              <h1>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(parseInt(val.balance))}</h1>
-                              <p>{val.noTelp}</p>
-                            </>
-                          )
-                        }
-                      })}
+                        <h1>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(parseInt(data?.balance))}</h1>
+                        <p>{data?.noTelp}</p>
                     </div>
                     <div>
                       <Link href='/transfer'>
@@ -192,12 +180,12 @@ const Home = (props) => {
                     <div className="wrap-income mt-3 mt-md-4 mx-3 mx-md-4">
                       <i className="wrap-income-i" data-feather="arrow-down"></i>
                       <p className="wrap-grap-p">Income</p>
-                      <p className="wrap-grap-balance">+{props.dataDasboard.totalIncome}</p>
+                      <p className="wrap-grap-balance">+{props.dataDasboard?.totalIncome}</p>
                     </div>
                     <div className="wrap-expense mt-3 mt-md-4 mx-3 mx-md-4">
                       <i className="wrap-expense-i" data-feather="arrow-up"></i>
                       <p className="wrap-grap-p">Expense</p>
-                      <p className="wrap-grap-balance">-{props.dataDasboard.totalExpense}</p>
+                      <p className="wrap-grap-balance">-{props.dataDasboard?.totalExpense}</p>
                     </div>
                   </div>
                   <div className="d-flex justify-content-center">

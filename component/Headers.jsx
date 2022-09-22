@@ -7,9 +7,10 @@ import { showProfile } from '../redux/asyncAction/profile'
 import Image from 'next/image';
 
 const Header = (props) => {
-  const data = Object.values(props.data.data)
+  const data = props.data.data
   const id = useSelector((state=>state.auth.id))
   const dispatch = useDispatch()
+  const urlImage=`https://res.cloudinary.com/dd1uwz8eu/image/upload/v1659549135/${data.image}`
   React.useEffect(()=>{
     dispatch(showProfile(id))
   },[])
@@ -23,22 +24,13 @@ const Header = (props) => {
         </Col>
         <Col md={5}>
           <div className="d-flex justify-content-between justify-content-md-end align-items-center wrap-profile ps-3 px-md-3 mx-2 mx-md-3">
-            {data?.map((val)=>{
-              const urlImage=`https://res.cloudinary.com/dd1uwz8eu/image/upload/v1659549135/${val.image}`
-              if(val.id){
-                return(
-                  <>
-                    <div className="img-home-prof img-fluid">
-                      <Image src={val.image?urlImage:defaultimg} width={45} height={45} alt="profile"/>
-                    </div>
-                    <div className="d-flex-column justify-content-center mx-3">
-                      <p className="name-profile">{val.firstName+' '+val.lastName}</p>
-                      <p className="num-profile">{val.noTelp}</p>
-                    </div>
-                  </>
-                )
-              }
-            })}
+            <div className="img-home-prof img-fluid">
+              <Image src={data.image?urlImage:defaultimg} width={45} height={45} alt="profile"/>
+            </div>
+            <div className="d-flex-column justify-content-center mx-3">
+              <p className="name-profile">{data.firstName+' '+data.lastName}</p>
+              <p className="num-profile">{data.noTelp}</p>
+            </div>
             <Dropdown className='me-4'>
               <Dropdown.Toggle className="w-100 wrap-bg-button wrap-header-button" type="button">
                 <FiBell className="wrap-nav-dashboard wrap-header-button"/>
