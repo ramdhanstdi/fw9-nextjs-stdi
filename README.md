@@ -1,8 +1,8 @@
 ## Preview
-<img src="./screenshoot/localhost_3000_home.png" width="100" height="auto" alt="Home">
-<img src="./screenshoot/localhost_3000_home (1).png" width="100" height="auto" alt="Home">
-<img src="./screenshoot/localhost_3000_home (2).png" width="100" height="auto" alt="Home">
-<img src="./screenshoot/localhost_3000_profile.png" width="100" height="auto" alt="Home">
+<img src="./screenshoot/localhost_3000_home.png" width="auto" height="400" alt="Home">
+<img src="./screenshoot/localhost_3000_home (1).png" width="auto" height="400" alt="Home">
+<img src="./screenshoot/localhost_3000_home (2).png" width="auto" height="400" alt="Home">
+<img src="./screenshoot/localhost_3000_profile.png" width="auto" height="400" alt="Home">
 
 # STD iWallet
 
