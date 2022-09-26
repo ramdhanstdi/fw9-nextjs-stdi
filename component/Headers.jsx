@@ -25,7 +25,7 @@ const Header = (props) => {
         <Col md={5}>
           <div className="d-flex justify-content-between justify-content-md-end align-items-center wrap-profile ps-3 px-md-3 mx-2 mx-md-3">
             <div className="img-home-prof img-fluid">
-              <Image src={data.image?urlImage:defaultimg} width={45} height={45} alt="profile"/>
+              <Image src={data.image?urlImage:defaultimg} width={45} height={45} className='img-home-prof img-fluid' alt="profile"/>
             </div>
             <div className="d-flex-column justify-content-center mx-3">
               <p className="name-profile">{data.firstName+' '+data.lastName}</p>

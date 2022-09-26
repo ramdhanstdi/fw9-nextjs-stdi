@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosApiIntances = axios.create({
-    baseURL: 'https://fazzpay-9dn2jaz6f-bagusth15.vercel.app/'
+    baseURL: process.env.REACT_APP_BACK_END_URL
 })
 
 export default axiosApiIntances

@@ -52,11 +52,11 @@ export async function getServerSideProps(context) {
 
 const StatusSuccess = (props) => {
   const dispatch = useDispatch()
+  const balance = props.data.balance;
   const dataName = useSelector((state=>state.transfer.name))
   const dataPhone = useSelector((state=>state.transfer.phone))
   const dataPhoto = useSelector((state=>state.transfer.photo))
   const dataDate = useSelector((state=>state.transfer.date))
-  const balance = useSelector((state=>state.profile.balance))
   const amount = useSelector((state=>state.amount.value))
   const notes = useSelector((state=>state.notes.value))
   const successmsg = useSelector((state=>state.transfer.successmsg))
@@ -65,7 +65,7 @@ const StatusSuccess = (props) => {
     dispatch(resetMsg())
   }
   const balanceleft = balance-amount
-
+  console.log(balance,amount);
   return (
     <>
       <Head>
