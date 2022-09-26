@@ -64,8 +64,6 @@ const StatusSuccess = (props) => {
   if(successmsg){
     dispatch(resetMsg())
   }
-  const balanceleft = balance-amount
-  console.log(balance,amount);
   return (
     <>
       <Head>
@@ -95,7 +93,7 @@ const StatusSuccess = (props) => {
                   <div className="d-flex">
                     <div className="d-flex-column justify-content-center ms-3">
                       <p  className="wrap-type-confirm mb-1">Balance Left</p>
-                      <p className="wrap-name-confirm">{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(parseInt(balanceleft))}</p>
+                      <p className="wrap-name-confirm">{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(parseInt(balance))}</p>
                     </div>
                   </div>
                 </div>
